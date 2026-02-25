@@ -7,24 +7,40 @@ const PortfolioSection = () => {
   
   const projects = [
     {
-      title: "FinTrack Dashboard",
-      category: language === 'ru' ? 'Веб-приложение' : 'Veb-ilova',
-      gradient: "from-neon-cyan/20 to-neon-violet/20",
+      title: "AKFA-COMFORT.UZ",
+      category: language === 'ru' ? 'Сайт-каталог' : 'Sayt-katalog',
+      image: "/akfa-confort.png",
+      link:"https://akfa-comfort.uz",
     },
     {
-      title: "ShopElite Store",
-      category: language === 'ru' ? 'Интернет-магазин' : 'Onlayn do\'kon',
-      gradient: "from-neon-violet/20 to-neon-cyan/20",
+      title: "MELBOURNEMASTERWORKS.COM",
+      category: language === 'ru' ? 'Сайт-каталог' : 'Sayt-katalog',
+      image: "/melbourne.png",
+      link:"https://melbournemasterworks.com",
     },
     {
-      title: "AutoFlow Bot",
-      category: "Telegram Bot",
-      gradient: "from-neon-cyan/20 to-primary/10",
+      title: "AMUDAGRO.UZ",
+      category: language === 'ru' ? 'Сайт-каталог' : 'Sayt-katalog',
+      image: "/amudagro.png",
+      link:"https://amudagro.uz",
     },
     {
-      title: "CloudSync Platform",
-      category: language === 'ru' ? 'Веб-платформа' : 'Veb platforma',
-      gradient: "from-secondary/20 to-neon-cyan/20",
+      title: "DIVID.UZ",
+      category: language === 'ru' ? 'Сайт-каталог' : 'Sayt-katalog',
+      image: "/dividend.png",
+      link:"https://divid-uz-2.vercel.app/",
+    },
+    {
+      title: "AKFATERRACESYSTEMS.UZ",
+      category: language === 'ru' ? 'Сайт-каталог' : 'Sayt-katalog',
+      image: "/akfaterrace.png",
+      link:"https://akbarilkhambaev.github.io/callcenter/",
+    },
+    {
+      title: "GIJJA-STOP.UZ",
+      category: language === 'ru' ? 'Лендинг' : 'Landing',
+      image: "/giffastop.png",
+      link:"http://gijastop.vercel.app/",
     },
   ];
 
@@ -45,11 +61,23 @@ const PortfolioSection = () => {
               className={`group glass rounded-2xl overflow-hidden hover-glow cursor-pointer scroll-reveal-scale ${inView ? 'active' : ''}`}
               style={{ transitionDelay: `${i * 0.1}s` }}
             >
-              <div className={`h-64 bg-gradient-to-br ${project.gradient} flex items-center justify-center relative group-hover:scale-105 transition-transform duration-500`}>
-                <div className="absolute inset-0 tech-grid opacity-50" />
-                <span className="font-display text-2xl font-bold text-foreground/80 relative z-10">
-                  {project.title}
-                </span>
+              <div className="h-64 overflow-hidden relative">
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={e => e.stopPropagation()}
+                    className="px-6 py-3 rounded-full border-2 border-white text-white font-semibold text-sm tracking-wide hover:bg-white hover:text-black transition-colors duration-200"
+                  >
+                    {language === 'ru' ? 'Посетить сайт' : 'Saytga o\'tish'} →
+                  </a>
+                </div>
               </div>
               <div className="p-6">
                 <span className="text-xs font-semibold text-primary uppercase tracking-widest">

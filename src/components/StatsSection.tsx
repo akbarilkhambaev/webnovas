@@ -11,14 +11,14 @@ const StatsSection = () => {
   const stats = [
     {
       icon: Target,
-      value: 150,
+      value: 10,
       suffix: '+',
       label: t('stats.projects'),
       key: 'projects',
     },
     {
       icon: Users,
-      value: 120,
+      value: 20,
       suffix: '+',
       label: t('stats.clients'),
       key: 'clients',
@@ -52,15 +52,15 @@ const StatsSection = () => {
       const progress = step / steps;
 
       setCounts({
-        projects: Math.floor(150 * progress),
-        clients: Math.floor(120 * progress),
+        projects: Math.floor(10 * progress),
+        clients: Math.floor(20 * progress),
         years: Math.floor(5 * progress),
         satisfaction: Math.floor(98 * progress),
       });
 
       if (step >= steps) {
         clearInterval(timer);
-        setCounts({ projects: 150, clients: 120, years: 5, satisfaction: 98 });
+        setCounts({ projects: 10, clients: 20, years: 5, satisfaction: 98 });
       }
     }, interval);
 
