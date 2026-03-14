@@ -119,8 +119,8 @@ const ContactSection = () => {
     {
       icon: Phone,
       label: t('contact.info.phone'),
-      value: "+998 90 123 45 67",
-      href: "tel:+998901234567",
+      value: "+998 77 877 46 04",
+      href: "tel:+998778774604",
     },
     {
       icon: MapPin,
