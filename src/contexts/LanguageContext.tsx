@@ -231,6 +231,23 @@ const translations: Record<Language, TranslationObject> = {
     chat: {
       tooltip: 'Написать нам',
     },
+    news: {
+      label: 'Блог & Новости',
+      heading: 'Последние',
+      headingHighlight: 'Статьи',
+      allArticles: 'Все статьи',
+      readMore: 'Читать далее',
+      backHome: 'На главную',
+      backToNews: 'Все статьи',
+      back: 'Назад',
+      pageDescription: 'Полезные материалы о веб-разработке, дизайне, автоматизации и цифровом маркетинге.',
+      searchPlaceholder: 'Поиск статей...',
+      allCategories: 'Все',
+      noResults: 'Статьи не найдены',
+      share: 'Поделиться',
+      relatedArticles: 'Похожие статьи',
+      notFound: 'Статья не найдена',
+    },
   },
   uz: {
     nav: {
@@ -421,6 +438,23 @@ const translations: Record<Language, TranslationObject> = {
     },
     chat: {
       tooltip: 'Bizga yozing',
+    },
+    news: {
+      label: 'Blog & Yangiliklar',
+      heading: 'So\'nggi',
+      headingHighlight: 'Maqolalar',
+      allArticles: 'Barcha maqolalar',
+      readMore: 'Batafsil o\'qish',
+      backHome: 'Bosh sahifaga',
+      backToNews: 'Barcha maqolalar',
+      back: 'Orqaga',
+      pageDescription: 'Veb-ishlab chiqish, dizayn, avtomatlashtirish va raqamli marketing bo\'yicha foydali materiallar.',
+      searchPlaceholder: 'Maqolalarni qidirish...',
+      allCategories: 'Hammasi',
+      noResults: 'Maqolalar topilmadi',
+      share: 'Ulashish',
+      relatedArticles: 'O\'xshash maqolalar',
+      notFound: 'Maqola topilmadi',
     },
   },
 };

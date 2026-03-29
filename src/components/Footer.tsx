@@ -1,9 +1,15 @@
 import { useLanguage } from "@/hooks/useLanguage";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Facebook, Instagram, Linkedin, Mail, Send } from "lucide-react";
 
 const Footer = () => {
   const { t } = useLanguage();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+
+  // On non-home pages prefix hash links with "/" so browser navigates home first
+  const resolveHref = (href: string) =>
+    href.startsWith("#") && !isHome ? `/${href}` : href;
 
   const socialLinks = [
     { icon: Send, href: "https://t.me/webnova_uz", label: "Telegram" },
@@ -15,6 +21,7 @@ const Footer = () => {
   const quickLinks = [
     { label: t('nav.services'), href: "#services" },
     { label: t('nav.portfolio'), href: "#portfolio" },
+    { label: t('news.label'), href: "/news", isRoute: true },
     { label: t('nav.faq'), href: "#faq" },
     { label: t('nav.contact'), href: "#contact" },
   ];
@@ -34,10 +41,10 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <a href="#" className="text-2xl font-display font-bold inline-block mb-4">
+            <Link to="/" className="text-2xl font-display font-bold inline-block mb-4">
               <span className="gradient-text">WEB</span>
               <span className="text-foreground">NOVA</span>
-            </a>
+            </Link>
             <p className="text-muted-foreground mb-6">
               {t('footer.description')}
             </p>
@@ -63,12 +70,21 @@ const Footer = () => {
             <ul className="space-y-2">
               {quickLinks.map((link, index) => (
                 <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    {link.label}
-                  </a>
+                  {link.isRoute ? (
+                    <Link
+                      to={link.href}
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={resolveHref(link.href)}
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -81,7 +97,7 @@ const Footer = () => {
               {serviceLinks.map((link, index) => (
                 <li key={index}>
                   <a
-                    href={link.href}
+                    href={resolveHref(link.href)}
                     className="text-muted-foreground hover:text-primary transition-colors"
                   >
                     {link.label}

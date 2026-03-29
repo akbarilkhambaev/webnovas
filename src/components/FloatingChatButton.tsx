@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { MessageCircle, X } from "lucide-react";
+import { FaTelegram, FaWhatsapp } from "react-icons/fa";
 import { Button } from "./ui/button";
 import {
   Tooltip,
@@ -16,15 +17,15 @@ const FloatingChatButton = () => {
   const chatOptions = [
     {
       name: "Telegram",
-      icon: "paper-plane",
+      icon: <FaTelegram size={22} />,
       bg: "bg-[#0088cc]",
-      link: "https://t.me/webnova_uz", // Replace with your actual Telegram
+      link: "https://t.me/webnovauz",
     },
     {
       name: "WhatsApp",
-      icon: "whatsapp",
+      icon: <FaWhatsapp size={22} />,
       bg: "bg-[#25D366]",
-      link: "https://wa.me/998901234567", // Replace with your actual WhatsApp
+      link: "https://wa.me/998778774604",
     },
   ];
 
@@ -43,6 +44,7 @@ const FloatingChatButton = () => {
                 className={`${option.bg} text-white px-4 py-3 rounded-full shadow-lg hover:scale-110 transition-all duration-300 flex items-center gap-3 whitespace-nowrap animate-fade-up`}
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
+                {option.icon}
                 <span className="font-semibold">{option.name}</span>
               </a>
             ))}

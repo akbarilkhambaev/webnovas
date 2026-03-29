@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Languages } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
 import type { Language } from "@/contexts/LanguageContext";
 
@@ -7,6 +8,8 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { language, setLanguage, t } = useLanguage();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,11 +20,16 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // On non-home pages, hash links get "/#hash" so they navigate home first
+  const resolveHref = (href: string) =>
+    href.startsWith("#") && !isHome ? `/${href}` : href;
+
   const navLinks = [
     { label: t('nav.services'), href: "#services" },
     { label: t('nav.portfolio'), href: "#portfolio" },
     { label: t('nav.faq'), href: "#faq" },
     { label: t('nav.calculator'), href: "#calculator" },
+    { label: t('news.label'), href: "/news", isRoute: true },
     { label: t('nav.contact'), href: "#contact" },
   ];
 
@@ -34,22 +42,32 @@ const Navbar = () => {
       scrolled ? 'glass border-b border-border/50 shadow-lg' : 'bg-transparent'
     }`}>
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="#" className="text-2xl font-display font-bold tracking-tight hover:scale-105 transition-transform duration-300">
+        <Link to="/" className="text-2xl font-display font-bold tracking-tight hover:scale-105 transition-transform duration-300">
           <span className="gradient-text">WEB</span>
           <span className="text-foreground">NOVA</span>
-        </a>
+        </Link>
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300"
-            >
-              {link.label}
-            </a>
-          ))}
+          {navLinks.map((link) =>
+            link.isRoute ? (
+              <Link
+                key={link.href}
+                to={link.href}
+                className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.href}
+                href={resolveHref(link.href)}
+                className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300"
+              >
+                {link.label}
+              </a>
+            )
+          )}
           
           {/* Language Switcher */}
           <button
@@ -62,7 +80,7 @@ const Navbar = () => {
           </button>
 
           <a
-            href="#contact"
+            href={resolveHref("#contact")}
             className="px-5 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold glow-cyan-sm hover:brightness-110 hover:scale-105 transition-all duration-300"
           >
             {t('hero.startProject')}
@@ -82,16 +100,27 @@ const Navbar = () => {
       {open && (
         <div className="md:hidden glass border-t border-border/30 animate-fade-up">
           <div className="container mx-auto px-6 py-4 flex flex-col gap-4">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) =>
+              link.isRoute ? (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  onClick={() => setOpen(false)}
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.href}
+                  href={resolveHref(link.href)}
+                  onClick={() => setOpen(false)}
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {link.label}
+                </a>
+              )
+            )}
             
             {/* Mobile Language Switcher */}
             <button

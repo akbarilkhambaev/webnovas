@@ -9,6 +9,7 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import TechStack from "@/components/TechStack";
 import PricingCalculator from "@/components/PricingCalculator";
 import FAQSection from "@/components/FAQSection";
+import NewsSection from "@/components/NewsSection";
 import ContactSection from "@/components/ContactSection";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
@@ -30,6 +31,7 @@ const Index = () => {
       <TechStack />
       <PricingCalculator />
       <FAQSection />
+      <NewsSection />
       <ContactSection />
       <FinalCTA />
       <Footer />
