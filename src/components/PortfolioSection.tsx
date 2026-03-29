@@ -12,6 +12,12 @@ const PortfolioSection = () => {
       image: "/akfa-confort.png",
       link:"https://akfa-comfort.uz",
     },
+        {
+      title: "MAXMUDOVA.UZ",
+      category: language === 'ru' ? 'Лендинг' : 'Landing',
+      image: "/maxmudova.png",
+      link:"http://maxmudova.uz/",
+    },
     {
       title: "MELBOURNEMASTERWORKS.COM",
       category: language === 'ru' ? 'Сайт-каталог' : 'Sayt-katalog',
@@ -25,10 +31,10 @@ const PortfolioSection = () => {
       link:"https://amudagro.uz",
     },
     {
-      title: "DIVID.UZ",
+      title: "DIVIDENDGROUP.UZ",
       category: language === 'ru' ? 'Сайт-каталог' : 'Sayt-katalog',
       image: "/dividend.png",
-      link:"https://divid-uz-2.vercel.app/",
+      link:"https://dividendgroup.uz",
     },
     {
       title: "AKFATERRACESYSTEMS.UZ",
@@ -36,12 +42,7 @@ const PortfolioSection = () => {
       image: "/akfaterrace.png",
       link:"https://akbarilkhambaev.github.io/callcenter/",
     },
-    {
-      title: "GIJJA-STOP.UZ",
-      category: language === 'ru' ? 'Лендинг' : 'Landing',
-      image: "/giffastop.png",
-      link:"http://gijastop.vercel.app/",
-    },
+
   ];
 
   return (
@@ -54,14 +55,14 @@ const PortfolioSection = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project, i) => (
             <div
               key={project.title}
               className={`group glass rounded-2xl overflow-hidden hover-glow cursor-pointer scroll-reveal-scale ${inView ? 'active' : ''}`}
               style={{ transitionDelay: `${i * 0.1}s` }}
             >
-              <div className="h-64 overflow-hidden relative">
+              <div className="h-56 overflow-hidden relative">
                 <img
                   src={project.image}
                   alt={project.title}
@@ -79,11 +80,11 @@ const PortfolioSection = () => {
                   </a>
                 </div>
               </div>
-              <div className="p-6">
+              <div className="p-5">
                 <span className="text-xs font-semibold text-primary uppercase tracking-widest">
                   {project.category}
                 </span>
-                <h3 className="text-xl font-display font-semibold text-foreground mt-1">
+                <h3 className="text-lg font-display font-semibold text-foreground mt-1">
                   {project.title}
                 </h3>
               </div>

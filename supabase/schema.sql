@@ -35,6 +35,9 @@ BEGIN
 END;
 $$;
 
+-- Allow anonymous users to call this function
+GRANT EXECUTE ON FUNCTION public.increment_article_views(TEXT) TO anon;
+
 -- 2. Auto-update updated_at on every row change
 CREATE OR REPLACE FUNCTION public.set_updated_at()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
