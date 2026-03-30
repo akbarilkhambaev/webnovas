@@ -1,8 +1,18 @@
-import { Navigate } from "react-router-dom";
+'use client'
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { session, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !session) {
+      router.push("/admin/login");
+    }
+  }, [loading, session, router]);
 
   if (loading) {
     return (
@@ -13,7 +23,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!session) {
-    return <Navigate to="/admin/login" replace />;
+    return null;
   }
 
   return <>{children}</>;

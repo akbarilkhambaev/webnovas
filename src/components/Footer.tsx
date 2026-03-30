@@ -1,11 +1,14 @@
+'use client'
+
 import { useLanguage } from "@/hooks/useLanguage";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Facebook, Instagram, Linkedin, Mail, Send } from "lucide-react";
 
 const Footer = () => {
   const { t } = useLanguage();
-  const location = useLocation();
-  const isHome = location.pathname === "/";
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   // On non-home pages prefix hash links with "/" so browser navigates home first
   const resolveHref = (href: string) =>
@@ -41,7 +44,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <Link to="/" className="text-2xl font-display font-bold inline-block mb-4">
+            <Link href="/" className="text-2xl font-display font-bold inline-block mb-4">
               <span className="gradient-text">WEB</span>
               <span className="text-foreground">NOVA</span>
             </Link>
@@ -72,7 +75,7 @@ const Footer = () => {
                 <li key={index}>
                   {link.isRoute ? (
                     <Link
-                      to={link.href}
+                      href={link.href}
                       className="text-muted-foreground hover:text-primary transition-colors"
                     >
                       {link.label}
@@ -113,7 +116,7 @@ const Footer = () => {
             <ul className="space-y-2 mb-6">
               <li>
                 <Link
-                  to="/privacy"
+                  href="/privacy"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   {t('footer.privacy')}
@@ -121,7 +124,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/terms"
+                  href="/terms"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   {t('footer.terms')}

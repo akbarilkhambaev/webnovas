@@ -1,6 +1,9 @@
+'use client'
+
 import { useState, useEffect } from "react";
 import { Menu, X, Languages } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLanguage } from "@/hooks/useLanguage";
 import type { Language } from "@/contexts/LanguageContext";
 
@@ -8,8 +11,8 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { language, setLanguage, t } = useLanguage();
-  const location = useLocation();
-  const isHome = location.pathname === "/";
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,7 +45,7 @@ const Navbar = () => {
       scrolled ? 'glass border-b border-border/50 shadow-lg' : 'bg-transparent'
     }`}>
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-display font-bold tracking-tight hover:scale-105 transition-transform duration-300">
+        <Link href="/" className="text-2xl font-display font-bold tracking-tight hover:scale-105 transition-transform duration-300">
           <span className="gradient-text">WEB</span>
           <span className="text-foreground">NOVA</span>
         </Link>
@@ -53,7 +56,7 @@ const Navbar = () => {
             link.isRoute ? (
               <Link
                 key={link.href}
-                to={link.href}
+                href={link.href}
                 className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300"
               >
                 {link.label}
@@ -104,7 +107,7 @@ const Navbar = () => {
               link.isRoute ? (
                 <Link
                   key={link.href}
-                  to={link.href}
+                  href={link.href}
                   onClick={() => setOpen(false)}
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >

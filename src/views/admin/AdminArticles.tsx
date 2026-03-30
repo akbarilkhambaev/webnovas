@@ -1,5 +1,7 @@
+'use client'
+
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { PlusCircle, Pencil, Trash2, Eye, EyeOff, ExternalLink, RefreshCw } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import type { NewsArticleRow } from "@/lib/supabase";
@@ -67,7 +69,7 @@ const AdminArticles = () => {
             <RefreshCw size={16} />
           </button>
           <Link
-            to="/admin/articles/new"
+            href="/admin/articles/new"
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm glow-cyan-sm hover:brightness-110 transition-all"
           >
             <PlusCircle size={16} />
@@ -85,7 +87,7 @@ const AdminArticles = () => {
         <div className="glass rounded-2xl p-16 text-center border border-border/30">
           <p className="text-muted-foreground mb-4">Статей пока нет</p>
           <Link
-            to="/admin/articles/new"
+            href="/admin/articles/new"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm"
           >
             <PlusCircle size={16} />
@@ -187,7 +189,7 @@ const AdminArticles = () => {
 
                       {/* Edit */}
                       <Link
-                        to={`/admin/articles/${article.id}/edit`}
+                        href={`/admin/articles/${article.id}/edit`}
                         className="p-2 rounded-lg glass border border-border/40 hover:border-primary/50 hover:text-primary transition-all"
                         title="Редактировать"
                       >

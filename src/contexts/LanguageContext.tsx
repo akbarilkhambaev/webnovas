@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, useState, ReactNode } from 'react';
 
 export type Language = 'ru' | 'uz';

@@ -1,5 +1,7 @@
+'use client'
+
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { ArrowRight, Clock, Tag } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useInView } from "@/hooks/useInView";
@@ -41,7 +43,7 @@ const NewsSection = () => {
             </h2>
           </div>
           <Link
-            to="/news"
+            href="/news"
             className="group flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300 self-start md:self-auto"
           >
             {t("news.allArticles")}
@@ -53,7 +55,7 @@ const NewsSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {articles.map((article, i) => (
             <Link
-              to={`/news/${article.slug}`}
+              href={`/news/${article.slug}`}
               key={article.id}
               className={`group glass rounded-2xl overflow-hidden hover-glow flex flex-col scroll-reveal-scale ${inView ? "active" : ""}`}
               style={{ transitionDelay: `${i * 0.1}s` }}

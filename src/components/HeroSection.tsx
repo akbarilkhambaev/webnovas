@@ -1,3 +1,6 @@
+'use client'
+
+import Image from "next/image";
 import heroBg from "@/assets/hero-bg.jpg";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -9,10 +12,12 @@ const HeroSection = () => {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0">
-        <img
+        <Image
           src={heroBg}
           alt=""
-          className="w-full h-full object-cover opacity-40"
+          fill
+          className="object-cover opacity-40"
+          priority
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
       </div>

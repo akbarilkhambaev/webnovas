@@ -1,4 +1,7 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+'use client'
+
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Clock, Tag, Share2, Calendar, ExternalLink, Eye } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -157,9 +160,10 @@ function renderInline(text: string): React.ReactNode {
 }
 
 const NewsDetail = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const params = useParams();
+  const slug = params?.slug as string | undefined;
   const { language, t } = useLanguage();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const [article, setArticle] = useState<NewsArticleRow | null>(null);
   const [related, setRelated] = useState<NewsArticleRow[]>([]);
@@ -206,7 +210,7 @@ const NewsDetail = () => {
     return (
       <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center gap-6">
         <h1 className="text-3xl font-bold">{t("news.notFound")}</h1>
-        <Link to="/news" className="text-primary hover:underline flex items-center gap-2">
+        <Link href="/news" className="text-primary hover:underline flex items-center gap-2">
           <ArrowLeft size={16} /> {t("news.backToNews")}
         </Link>
       </div>
@@ -239,7 +243,7 @@ const NewsDetail = () => {
           {/* Back navigation */}
           <div className="mb-8 animate-fade-up opacity-0" style={{ animationFillMode: "forwards" }}>
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => router.back()}
               className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               <ArrowLeft size={16} />
@@ -342,7 +346,7 @@ const NewsDetail = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {related.map((rel) => (
                   <Link
-                    to={`/news/${rel.slug}`}
+                    href={`/news/${rel.slug}`}
                     key={rel.id}
                     className="group glass rounded-2xl overflow-hidden hover-glow flex flex-col"
                   >
@@ -371,7 +375,7 @@ const NewsDetail = () => {
           {/* Back to news */}
           <div className="max-w-3xl mx-auto mt-12 text-center">
             <Link
-              to="/news"
+              href="/news"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl glass border border-border/50 hover:border-primary/50 hover:text-primary transition-all duration-300 font-semibold"
             >
               <ArrowLeft size={16} />

@@ -1,5 +1,8 @@
+'use client'
+
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
 import { Save, ArrowLeft, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import type { NewsArticleRow, NewsArticleInsert } from "@/lib/supabase";
@@ -71,8 +74,9 @@ const textareaCls =
 // ─── Component ───────────────────────────────────────────────────────────────
 
 const ArticleForm = () => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const params = useParams();
+  const id = params?.id as string | undefined;
+  const router = useRouter();
   const isEdit = Boolean(id);
 
   const [form, setForm] = useState<NewsArticleInsert>(defaultForm());
@@ -94,7 +98,7 @@ const ArticleForm = () => {
       .single()
       .then(({ data, error }) => {
         if (error || !data) {
-          navigate("/admin/articles");
+          router.push("/admin/articles");
           return;
         }
         const a = data as NewsArticleRow;
@@ -122,7 +126,7 @@ const ArticleForm = () => {
         setSlugEdited(true);
         setLoading(false);
       });
-  }, [id, isEdit, navigate]);
+  }, [id, isEdit, router]);
 
   const set = (key: keyof NewsArticleInsert, value: unknown) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -158,7 +162,7 @@ const ArticleForm = () => {
     if (err) {
       setError(err.message);
     } else {
-      navigate("/admin/articles");
+      router.push("/admin/articles");
     }
   };
 
@@ -179,7 +183,7 @@ const ArticleForm = () => {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <Link
-              to="/admin/articles"
+              href="/admin/articles"
               className="p-2 rounded-xl glass border border-border/40 hover:border-primary/50 hover:text-primary transition-all"
             >
               <ArrowLeft size={16} />

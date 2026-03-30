@@ -1,8 +1,10 @@
+'use client'
+
 import { useLanguage } from "@/hooks/useLanguage";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const Terms = () => {
   const { language } = useLanguage();
@@ -86,7 +88,7 @@ const Terms = () => {
       
       <div className="container mx-auto px-6 py-24">
         <Link
-          to="/"
+          href="/"
           className="inline-flex items-center gap-2 text-primary hover:brightness-110 transition-all mb-8"
         >
           <ArrowLeft size={20} />

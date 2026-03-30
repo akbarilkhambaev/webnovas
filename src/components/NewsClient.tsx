@@ -1,34 +1,26 @@
-import { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+'use client'
+
+import { useState, useMemo } from "react";
+import Link from "next/link";
 import { ArrowLeft, ArrowRight, Clock, Tag, Search } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AnimatedBackground from "@/components/AnimatedBackground";
-import { supabase, type NewsArticleRow } from "@/lib/supabase";
+import { type NewsArticleRow } from "@/lib/supabase";
 import { formatDate } from "@/data/news";
 
 const ARTICLES_PER_PAGE = 6;
 
-const News = () => {
+interface Props {
+  articles: NewsArticleRow[];
+}
+
+export default function NewsClient({ articles }: Props) {
   const { language, t } = useLanguage();
-  const [articles, setArticles] = useState<NewsArticleRow[]>([]);
-  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    supabase
-      .from("news_articles")
-      .select("*")
-      .eq("published", true)
-      .order("date", { ascending: false })
-      .then(({ data }) => {
-        if (data) setArticles(data as NewsArticleRow[]);
-        setLoading(false);
-      });
-  }, []);
 
   const categories = useMemo(
     () => [
@@ -69,7 +61,7 @@ const News = () => {
           {/* Page header */}
           <div className="text-center mb-16 animate-fade-up opacity-0" style={{ animationFillMode: "forwards" }}>
             <Link
-              to="/"
+              href="/"
               className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8"
             >
               <ArrowLeft size={16} />
@@ -120,12 +112,8 @@ const News = () => {
             </div>
           </div>
 
-          {/* Loading */}
-          {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            </div>
-          ) : paginated.length === 0 ? (
+          {/* Article grid */}
+          {paginated.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground">
               {t("news.noResults")}
             </div>
@@ -139,7 +127,7 @@ const News = () => {
                 const readTime = language === "ru" ? article.read_time_ru : article.read_time_uz;
                 return (
                   <Link
-                    to={`/news/${article.slug}`}
+                    href={`/news/${article.slug}`}
                     key={article.id}
                     className="group glass rounded-2xl overflow-hidden hover-glow flex flex-col animate-fade-up opacity-0"
                     style={{ animationDelay: `${0.2 + i * 0.08}s`, animationFillMode: "forwards" }}
@@ -228,6 +216,4 @@ const News = () => {
       <Footer />
     </div>
   );
-};
-
-export default News;
+}

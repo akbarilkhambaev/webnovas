@@ -1,19 +1,26 @@
-import { useState } from "react";
-import { Navigate } from "react-router-dom";
+'use client'
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { LogIn, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const AdminLogin = () => {
   const { session, signIn, loading } = useAuth();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  if (!loading && session) {
-    return <Navigate to="/admin/articles" replace />;
-  }
+  useEffect(() => {
+    if (!loading && session) {
+      router.push("/admin/articles");
+    }
+  }, [loading, session, router]);
+
+  if (loading) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

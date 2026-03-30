@@ -1,15 +1,18 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+'use client'
+
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, FileText, LogOut, PlusCircle, Globe } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, signOut } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/admin/login");
+    router.push("/admin/login");
   };
 
   const navItems = [
@@ -23,7 +26,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       <aside className="w-64 shrink-0 glass border-r border-border/40 flex flex-col">
         {/* Logo */}
         <div className="p-6 border-b border-border/30">
-          <Link to="/" target="_blank" className="flex items-center gap-2 group">
+          <Link href="/" target="_blank" className="flex items-center gap-2 group">
             <span className="text-xl font-display font-bold">
               <span className="gradient-text">WEB</span>
               <span className="text-foreground">NOVA</span>
@@ -39,11 +42,11 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             Управление
           </p>
           {navItems.map(({ label, href, icon: Icon }) => {
-            const active = location.pathname === href;
+            const active = pathname === href;
             return (
               <Link
                 key={href}
-                to={href}
+                href={href}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                   active
                     ? "bg-primary/15 text-primary border border-primary/25"
