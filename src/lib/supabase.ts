@@ -1,27 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Lazy singleton — don't throw at module evaluation time so static pages
-// (/_not-found, etc.) can be prerendered even without env vars at build time.
-let _supabase: ReturnType<typeof createClient> | null = null;
-
-function getClient() {
-  if (_supabase) return _supabase;
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) {
-    throw new Error(
-      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables"
-    );
-  }
-  _supabase = createClient(url, key);
-  return _supabase;
-}
-
-export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
-  get(_target, prop) {
-    return (getClient() as never)[prop];
-  },
-});
+// Fallback empty strings prevent module-evaluation crash during static prerender.
+// Real values must be set in Vercel env vars — calls will fail gracefully without them.
+export const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ""
+);
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
