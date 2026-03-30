@@ -27,6 +27,10 @@ function getSupabase() {
 }
 
 export default async function NewsPage() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    return <NewsClient articles={[]} />
+  }
+
   const { data } = await getSupabase()
     .from('news_articles')
     .select('*')

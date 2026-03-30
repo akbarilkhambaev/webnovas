@@ -19,6 +19,10 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    return { title: 'Статья не найдена' }
+  }
+
   const { slug } = await params
   const { data } = await getSupabase()
     .from('news_articles')
@@ -48,6 +52,8 @@ export default async function NewsDetailPage({
 }: {
   params: Promise<{ slug: string }>
 }) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) notFound()
+
   const { slug } = await params
   const supabase = getSupabase()
 
