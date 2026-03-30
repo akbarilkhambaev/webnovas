@@ -179,7 +179,8 @@ const NewsDetail = () => {
       .single()
       .then(({ data }) => {
         // Increment view counter (fire-and-forget)
-        supabase.rpc("increment_article_views", { article_slug: slug });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (supabase.rpc as any)("increment_article_views", { article_slug: slug });
         if (!data) { setLoading(false); return; }
         const a = data as NewsArticleRow;
         setArticle(a);
