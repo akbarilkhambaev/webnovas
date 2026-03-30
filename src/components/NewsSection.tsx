@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Clock, Tag } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useInView } from "@/hooks/useInView";
-import { supabase, type NewsArticleRow } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured, type NewsArticleRow } from "@/lib/supabase";
 import { formatDate } from "@/data/news";
 
 const NewsSection = () => {
@@ -14,6 +14,7 @@ const NewsSection = () => {
   const [articles, setArticles] = useState<NewsArticleRow[]>([]);
 
   useEffect(() => {
+    if (!isSupabaseConfigured) return;
     supabase
       .from("news_articles")
       .select("id,slug,category_ru,category_uz,title_ru,title_uz,excerpt_ru,excerpt_uz,date,read_time_ru,read_time_uz,image_url")

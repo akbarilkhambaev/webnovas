@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "./ui/button";
@@ -26,8 +28,7 @@ const ContactSection = () => {
     setIsSubmitting(true);
 
     try {
-      // Check if we're in development mode without Vercel
-      const isDevelopment = import.meta.env.DEV;
+      const isDevelopment = process.env.NODE_ENV === 'development';
       
       const response = await fetch('/api/send-telegram', {
         method: 'POST',
@@ -79,8 +80,7 @@ const ContactSection = () => {
     } catch (error) {
       console.error('Error submitting form:', error);
       
-      // In development, show success even if API fails
-      if (import.meta.env.DEV) {
+      if (process.env.NODE_ENV === 'development') {
         console.log('📧 Форма отправлена (DEV режим):', formData);
         toast({
           title: "✅ Форма отправлена (DEV режим)",
