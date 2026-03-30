@@ -170,7 +170,8 @@ export default function NewsDetailClient({ article, related, slug }: Props) {
 
   // Increment view counter once after hydration (client-only)
   useEffect(() => {
-    supabase.rpc("increment_article_views", { article_slug: slug });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase.rpc as any)("increment_article_views", { article_slug: slug });
   }, [slug]);
 
   const title = language === "ru" ? article.title_ru : article.title_uz;
