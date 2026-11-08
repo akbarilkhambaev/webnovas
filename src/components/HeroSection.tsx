@@ -1,6 +1,8 @@
 'use client'
 
+import { useCallback, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import HeroScene from "@/components/hero/HeroScene";
 import { useLanguage } from "@/hooks/useLanguage";
 import { container } from "@/components/brand/SectionHeader";
 import { priceFrom } from "@/lib/price";
@@ -85,6 +87,8 @@ const Ornament = ({ label }: { label: string }) => (
 
 const HeroSection = () => {
   const { t, language } = useLanguage();
+  const [sceneFailed, setSceneFailed] = useState(false);
+  const handleSceneFail = useCallback(() => setSceneFailed(true), []);
 
   const facts = [
     { label: t("home.factSite"), value: priceFrom(PRICE.website, language) },
@@ -93,10 +97,16 @@ const HeroSection = () => {
   ];
 
   return (
-    <section id="top" className="relative overflow-hidden border-b border-border">
-      <div className="wn-tile pointer-events-none absolute inset-0" aria-hidden="true" />
+    <section id="top" className="wn-hero-sky relative overflow-hidden border-b border-border">
+      {!sceneFailed && <HeroScene onFail={handleSceneFail} />}
 
-      <div className={`${container} relative pb-[clamp(48px,6vw,88px)] pt-[calc(72px_+_clamp(48px,7vw,112px))]`}>
+      <div
+        className={`${container} relative pb-[clamp(48px,6vw,88px)] ${
+          sceneFailed
+            ? "pt-[calc(72px_+_clamp(48px,7vw,112px))]"
+            : "pt-[calc(72px_+_240px)] lg:pt-[calc(72px_+_clamp(48px,7vw,112px))]"
+        }`}
+      >
         <div className="flex flex-wrap items-center gap-12">
           <div className="flex min-w-0 flex-[1_1_600px] flex-col gap-8">
             <p className="wn-label text-secondary opacity-0 animate-fade-up">{t("home.kicker")}</p>
@@ -133,9 +143,14 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <div className="flex min-w-0 flex-[0_1_440px] justify-center opacity-0 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            <Ornament label={t("home.ornament")} />
-          </div>
+          {sceneFailed ? (
+            <div className="flex min-w-0 flex-[0_1_440px] justify-center opacity-0 animate-fade-in" style={{ animationDelay: "0.2s" }}>
+              <Ornament label={t("home.ornament")} />
+            </div>
+          ) : (
+            // Пустая колонка держит ширину текста: справа сквозь неё видно поле изразцов
+            <div aria-hidden="true" className="hidden min-w-0 flex-[0_1_440px] lg:block" />
+          )}
         </div>
 
         <dl className="mt-[clamp(48px,6vw,80px)] grid grid-cols-1 border-t border-border sm:grid-cols-3">

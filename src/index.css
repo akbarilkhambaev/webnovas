@@ -234,6 +234,84 @@
   }
 }
 
+/* ---------- Небо: лазурит куполов → чернила ночи ---------- */
+
+/* Свечения на всю страницу; при прокрутке GSAP сдвигает их трансформом (components/brand/SkyBackground) */
+.wn-sky {
+  background: linear-gradient(180deg, #0b1124 0%, #0c0e12 55%, #0c0e12 100%);
+}
+
+.wn-glow {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.wn-glow-lapis {
+  width: 95vmax;
+  height: 95vmax;
+  right: -35vmax;
+  top: -45vmax;
+  background: radial-gradient(closest-side, rgb(27 47 122 / 0.6), rgb(27 47 122 / 0.18) 55%, transparent);
+}
+
+.wn-glow-teal {
+  width: 60vmax;
+  height: 60vmax;
+  left: -28vmax;
+  top: 35vh;
+  background: radial-gradient(closest-side, rgb(63 208 212 / 0.09), transparent);
+}
+
+.wn-glow-gold {
+  width: 80vmax;
+  height: 55vmax;
+  left: 10vw;
+  bottom: -48vmax;
+  opacity: 0.45;
+  background: radial-gradient(closest-side, rgb(227 176 75 / 0.09), transparent);
+}
+
+/* Первый экран: свечение лазурита за полем изразцов */
+.wn-hero-sky {
+  background:
+    radial-gradient(55% 70% at 78% 40%, rgb(27 47 122 / 0.55), transparent 72%),
+    radial-gradient(35% 45% at 95% 92%, rgb(63 208 212 / 0.14), transparent 70%),
+    radial-gradient(40% 50% at 5% 0%, rgb(227 176 75 / 0.08), transparent 70%);
+}
+
+/* Холст 3D-сцены. На телефоне — полоса над заголовком, на широком экране — справа от текста.
+   Маска растворяет поле под шапкой, текстом и нижней строкой фактов. */
+.wn-hero-canvas {
+  inset: 0 0 auto 0;
+  height: 340px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 110px, #000 48%, transparent 88%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 110px, #000 48%, transparent 88%);
+}
+
+@media (min-width: 1024px) {
+  .wn-hero-canvas {
+    inset: 0;
+    height: auto;
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 44%, #000 70%),
+      linear-gradient(to bottom, transparent 40px, #000 170px, #000 70%, transparent 94%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(to right, transparent 44%, #000 70%),
+      linear-gradient(to bottom, transparent 40px, #000 170px, #000 70%, transparent 94%);
+    mask-composite: intersect;
+  }
+}
+
+/* Рамка карточки контактов — переливается, как край глазури */
+.wn-glaze-border {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+    linear-gradient(135deg, rgb(63 208 212 / 0.9), rgb(36 64 158 / 0.9) 45%, rgb(227 176 75 / 0.8)) border-box;
+}
+
 /* Плавное раскрытие ответов в FAQ — там, где браузер это умеет; в остальных просто открывается */
 @supports (interpolate-size: allow-keywords) {
   .wn-faq {

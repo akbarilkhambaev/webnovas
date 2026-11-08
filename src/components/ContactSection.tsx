@@ -60,7 +60,7 @@ const ContactSection = () => {
   return (
     <section id="contact" ref={ref} className={`${container} py-[clamp(72px,9vw,128px)]`}>
       <div
-        className={`flex flex-wrap gap-14 rounded-[28px] border border-border bg-card p-[clamp(24px,5vw,64px)] scroll-reveal ${
+        className={`wn-glaze-border flex flex-wrap gap-14 rounded-[28px] p-[clamp(24px,5vw,64px)] scroll-reveal ${
           inView ? "active" : ""
         }`}
       >

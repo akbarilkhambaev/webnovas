@@ -11,13 +11,16 @@ import NewsSection from "@/components/NewsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import FloatingChatButton from "@/components/FloatingChatButton";
+import SkyBackground from "@/components/brand/SkyBackground";
 
 // Статистика, отзывы, «почему мы», стек и финальный CTA убраны с главной:
 // в них были непроверяемые цифры и примерные отзывы. Файлы компонентов остались —
 // их можно вернуть, когда появятся реальные данные.
 const Index = () => {
   return (
-    <div className="relative min-h-screen overflow-x-clip bg-background text-foreground">
+    // isolate: небо с -z-10 рисуется поверх фона страницы, но под содержимым
+    <div className="relative isolate min-h-screen overflow-x-clip bg-background text-foreground">
+      <SkyBackground />
       <Navbar />
       <main>
         <HeroSection />
