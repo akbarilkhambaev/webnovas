@@ -1,17 +1,24 @@
 import type { Metadata } from 'next'
-import { Inter, Space_Grotesk } from 'next/font/google'
+import { Unbounded, Onest, JetBrains_Mono } from 'next/font/google'
 import '@/index.css'
 import Providers from '@/components/Providers'
 
-const inter = Inter({
+// Все три шрифта поддерживают кириллицу и узбекскую латиницу
+const display = Unbounded({
   subsets: ['latin', 'cyrillic'],
-  variable: '--font-inter',
+  variable: '--font-display',
   display: 'swap',
 })
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  variable: '--font-space-grotesk',
+const body = Onest({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-body',
+  display: 'swap',
+})
+
+const mono = JetBrains_Mono({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-mono',
   display: 'swap',
 })
 
@@ -23,7 +30,7 @@ const jsonLd = {
   description: 'Цифровое агентство в Ташкенте. Разрабатываем сайты, веб-приложения, интернет-магазины и Telegram боты.',
   contactPoint: {
     '@type': 'ContactPoint',
-    telephone: '+998-90-123-45-67',
+    telephone: '+998-77-877-46-04',
     contactType: 'customer service',
     availableLanguage: ['Russian', 'Uzbek'],
   },
@@ -77,7 +84,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html lang="ru" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <head>
         <script
           type="application/ld+json"

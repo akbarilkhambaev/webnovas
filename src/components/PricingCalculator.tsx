@@ -1,11 +1,34 @@
 import { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { Button } from "./ui/button";
-import { Checkbox } from "./ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import { Label } from "./ui/label";
-import { Calculator } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
+import SectionHeader, { container } from "@/components/brand/SectionHeader";
+import { formatUsd, priceFrom } from "@/lib/price";
+
+const PROJECT_TYPES = [
+  { id: "website", basePrice: 500 },
+  { id: "ecommerce", basePrice: 1500 },
+  { id: "telegram", basePrice: 300 },
+  { id: "webapp", basePrice: 2000 },
+  { id: "automation", basePrice: 800 },
+];
+
+const FEATURES = [
+  { id: "cms", price: 300 },
+  { id: "multilang", price: 200 },
+  { id: "seo", price: 250 },
+  { id: "analytics", price: 150 },
+  { id: "payment", price: 400 },
+  { id: "mobile", price: 1000 },
+];
+
+// Множители срока — как в прежней версии калькулятора
+const TIMELINES = [
+  { id: "urgent", multiplier: 1.5 },
+  { id: "standard", multiplier: 1 },
+  { id: "flexible", multiplier: 0.85 },
+];
+
+const legendClass = "mb-4 font-mono text-[13px] uppercase tracking-[0.06em] text-muted-foreground";
 
 const PricingCalculator = () => {
   const { t, language } = useLanguage();
@@ -14,189 +37,128 @@ const PricingCalculator = () => {
   const [features, setFeatures] = useState<string[]>([]);
   const [timeline, setTimeline] = useState("standard");
 
-  const projectTypes = [
-    { id: "website", label: t('services.website.title'), basePrice: 500 },
-    { id: "ecommerce", label: t('services.ecommerce.title'), basePrice: 1500 },
-    { id: "telegram", label: t('services.telegram.title'), basePrice: 300 },
-    { id: "webapp", label: t('services.webapp.title'), basePrice: 2000 },
-    { id: "automation", label: t('services.automation.title'), basePrice: 800 },
-  ];
+  const type = PROJECT_TYPES.find((p) => p.id === projectType) ?? PROJECT_TYPES[0];
+  const time = TIMELINES.find((p) => p.id === timeline) ?? TIMELINES[1];
+  const featuresPrice = FEATURES.filter((f) => features.includes(f.id)).reduce((sum, f) => sum + f.price, 0);
+  const total = Math.round((type.basePrice + featuresPrice) * time.multiplier);
 
-  const additionalFeatures = [
-    { 
-      id: "cms", 
-      label: language === 'ru' ? 'Система управления контентом (CMS)' : 'Kontent boshqaruv tizimi (CMS)', 
-      price: 300 
-    },
-    { 
-      id: "multilang", 
-      label: language === 'ru' ? 'Мультиязычность' : 'Ko\'p tillilik', 
-      price: 200 
-    },
-    { 
-      id: "seo", 
-      label: language === 'ru' ? 'SEO оптимизация' : 'SEO optimallashtirish', 
-      price: 250 
-    },
-    { 
-      id: "analytics", 
-      label: language === 'ru' ? 'Аналитика и отчеты' : 'Analitika va hisobotlar', 
-      price: 150 
-    },
-    { 
-      id: "payment", 
-      label: language === 'ru' ? 'Интеграция платежных систем' : 'To\'lov tizimlarini integratsiya', 
-      price: 400 
-    },
-    { 
-      id: "mobile", 
-      label: language === 'ru' ? 'Мобильное приложение' : 'Mobil ilova', 
-      price: 1000 
-    },
-  ];
-
-  const timelines = [
-    { 
-      id: "urgent", 
-      label: language === 'ru' ? 'Срочно (1-2 недели)' : 'Shoshilinch (1-2 hafta)', 
-      multiplier: 1.5 
-    },
-    { 
-      id: "standard", 
-      label: language === 'ru' ? 'Стандарт (3-4 недели)' : 'Standart (3-4 hafta)', 
-      multiplier: 1 
-    },
-    { 
-      id: "flexible", 
-      label: language === 'ru' ? 'Гибкий график (1-2 месяца)' : 'Moslashuvchan jadval (1-2 oy)', 
-      multiplier: 0.85 
-    },
-  ];
-
-  const calculatePrice = () => {
-    const basePrice = projectTypes.find((p) => p.id === projectType)?.basePrice || 0;
-    const featuresPrice = features.reduce((sum, featureId) => {
-      const feature = additionalFeatures.find((f) => f.id === featureId);
-      return sum + (feature?.price || 0);
-    }, 0);
-    const timelineMultiplier = timelines.find((t) => t.id === timeline)?.multiplier || 1;
-
-    return Math.round((basePrice + featuresPrice) * timelineMultiplier);
-  };
-
-  const toggleFeature = (featureId: string) => {
-    setFeatures((prev) =>
-      prev.includes(featureId)
-        ? prev.filter((id) => id !== featureId)
-        : [...prev, featureId]
-    );
-  };
+  const toggleFeature = (id: string) =>
+    setFeatures((prev) => (prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]));
 
   return (
-    <section id="calculator" className="py-32 relative overflow-hidden" ref={ref}>
-      <div className="absolute inset-0 tech-grid opacity-20" />
-      
-      {/* Glow effects */}
-      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-neon-cyan/5 rounded-full blur-[120px]" />
+    <section id="calculator" ref={ref} className={`${container} pt-[clamp(72px,9vw,128px)]`}>
+      <div className={`scroll-reveal ${inView ? "active" : ""}`}>
+        <SectionHeader index="04" label={t("home.labels.price")} title={t("home.calc.heading")} />
+      </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className={`text-center mb-20 scroll-reveal ${inView ? 'active' : ''}`}>
-          <span className="text-primary text-sm font-semibold tracking-widest uppercase">
-            {t('calculator.title')}
+      <div className={`flex flex-wrap items-start gap-10 scroll-reveal ${inView ? "active" : ""}`}>
+        <div className="flex min-w-0 flex-[999_1_560px] flex-col gap-10">
+          {/* Тип проекта */}
+          <fieldset>
+            <legend className={legendClass}>{t("home.calc.type")}</legend>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {PROJECT_TYPES.map((p) => (
+                <label key={p.id} className="cursor-pointer">
+                  <input
+                    type="radio"
+                    name="projectType"
+                    value={p.id}
+                    checked={projectType === p.id}
+                    onChange={() => setProjectType(p.id)}
+                    className="peer sr-only"
+                  />
+                  <span className="flex min-h-[84px] flex-col gap-1.5 rounded-[14px] border border-input bg-card px-[18px] py-4 transition-colors hover:border-muted-foreground peer-checked:border-primary peer-checked:bg-primary peer-checked:text-primary-foreground peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-secondary">
+                    <span className="text-[17px] font-semibold">{t(`services.${p.id}.title`)}</span>
+                    <span className="font-mono text-sm opacity-80">{priceFrom(p.basePrice, language)}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          {/* Срок */}
+          <fieldset>
+            <legend className={legendClass}>{t("home.calc.timeline")}</legend>
+            <div className="flex flex-wrap gap-3">
+              {TIMELINES.map((p) => (
+                <label key={p.id} className="cursor-pointer">
+                  <input
+                    type="radio"
+                    name="timeline"
+                    value={p.id}
+                    checked={timeline === p.id}
+                    onChange={() => setTimeline(p.id)}
+                    className="peer sr-only"
+                  />
+                  <span className="inline-flex min-h-[48px] items-center gap-2 rounded-full border border-input px-5 font-semibold transition-colors hover:border-muted-foreground peer-checked:border-secondary peer-checked:bg-secondary peer-checked:text-secondary-foreground peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary">
+                    {t(`home.calc.${p.id}`)}
+                    <span className="font-normal opacity-75">· {t(`home.calc.${p.id}Range`)}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          {/* Дополнительно */}
+          <fieldset>
+            <legend className={legendClass}>{t("home.calc.features")}</legend>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {FEATURES.map((f) => (
+                <label
+                  key={f.id}
+                  className="flex min-h-[56px] cursor-pointer items-center gap-3.5 rounded-[14px] border border-input bg-card px-[18px] py-3 transition-colors hover:border-muted-foreground has-[:checked]:border-primary"
+                >
+                  <input
+                    type="checkbox"
+                    checked={features.includes(f.id)}
+                    onChange={() => toggleFeature(f.id)}
+                    className="h-5 w-5 shrink-0 cursor-pointer accent-[#3FD0D4]"
+                  />
+                  <span className="flex-1">{t(`home.calc.${f.id}`)}</span>
+                  <span className="font-mono text-sm text-muted-foreground">+{formatUsd(f.price)}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        </div>
+
+        {/* Итог */}
+        <aside
+          aria-live="polite"
+          className="flex min-w-0 flex-[1_1_340px] flex-col gap-6 rounded-[20px] bg-foreground p-8 text-background lg:sticky lg:top-24"
+        >
+          <span className="font-mono text-[13px] uppercase tracking-[0.06em] text-[#4A4F58]">
+            {t("home.calc.estimate")}
           </span>
-          <h2 className="text-4xl lg:text-5xl font-display font-bold mt-3">
-            {t('calculator.heading')}{" "}
-            <span className="gradient-text">{t('calculator.headingHighlight')}</span>
-          </h2>
-          <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-            {t('calculator.description')}
-          </p>
-        </div>
-
-        <div className={`max-w-4xl mx-auto glass rounded-2xl p-8 scroll-reveal-scale ${inView ? 'active' : ''}`}>
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Left Column - Options */}
-            <div className="space-y-8">
-              {/* Project Type */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4">{t('calculator.projectType')}</h3>
-                <RadioGroup value={projectType} onValueChange={setProjectType}>
-                  <div className="space-y-3">
-                    {projectTypes.map((type) => (
-                      <div key={type.id} className="flex items-center space-x-2">
-                        <RadioGroupItem value={type.id} id={type.id} />
-                        <Label htmlFor={type.id} className="cursor-pointer">
-                          {type.label} (${type.basePrice})
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </RadioGroup>
-              </div>
-
-              {/* Timeline */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4">{t('calculator.timeline')}</h3>
-                <RadioGroup value={timeline} onValueChange={setTimeline}>
-                  <div className="space-y-3">
-                    {timelines.map((time) => (
-                      <div key={time.id} className="flex items-center space-x-2">
-                        <RadioGroupItem value={time.id} id={time.id} />
-                        <Label htmlFor={time.id} className="cursor-pointer">
-                          {time.label}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </RadioGroup>
-              </div>
-            </div>
-
-            {/* Right Column - Features & Price */}
-            <div className="space-y-8">
-              {/* Additional Features */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4">{t('calculator.features')}</h3>
-                <div className="space-y-3">
-                  {additionalFeatures.map((feature) => (
-                    <div key={feature.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={feature.id}
-                        checked={features.includes(feature.id)}
-                        onCheckedChange={() => toggleFeature(feature.id)}
-                      />
-                      <Label htmlFor={feature.id} className="cursor-pointer">
-                        {feature.label} (+${feature.price})
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Price Display */}
-              <div className="bg-primary/5 rounded-xl p-6 border border-primary/20">
-                <div className="flex items-center gap-3 mb-2">
-                  <Calculator className="text-primary" size={24} />
-                  <h3 className="text-lg font-semibold">{t('calculator.estimate')}</h3>
-                </div>
-                <div className="text-4xl font-display font-bold gradient-text">
-                  {t('calculator.from')} ${calculatePrice().toLocaleString()}
-                </div>
-              </div>
-
-              {/* CTA Button */}
-              <Button
-                className="w-full bg-primary text-primary-foreground glow-cyan hover:brightness-110"
-                size="lg"
-                onClick={() => {
-                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                {t('calculator.consultation')}
-              </Button>
-            </div>
+          <div className="font-display text-[clamp(40px,4.4vw,64px)] font-medium leading-none tracking-[-0.03em]">
+            {priceFrom(total, language)}
           </div>
-        </div>
+          <dl className="border-t border-[#C9C5BB]">
+            <div className="flex justify-between gap-4 border-b border-[#C9C5BB] py-3.5">
+              <dt className="text-[#4A4F58]">{t("home.calc.rowProject")}</dt>
+              <dd className="text-right font-semibold">{t(`services.${type.id}.title`)}</dd>
+            </div>
+            <div className="flex justify-between gap-4 border-b border-[#C9C5BB] py-3.5">
+              <dt className="text-[#4A4F58]">{t("home.calc.rowTimeline")}</dt>
+              <dd className="text-right font-semibold">
+                {t(`home.calc.${time.id}`)}, {t(`home.calc.${time.id}Range`)}
+              </dd>
+            </div>
+            <div className="flex justify-between gap-4 border-b border-[#C9C5BB] py-3.5">
+              <dt className="text-[#4A4F58]">{t("home.calc.rowOptions")}</dt>
+              <dd className="text-right font-semibold">
+                {features.length === 0 ? t("home.calc.none") : features.length}
+              </dd>
+            </div>
+          </dl>
+          <a
+            href="#contact"
+            className="inline-flex min-h-[56px] items-center justify-center rounded-full bg-background font-semibold text-foreground transition hover:brightness-125"
+          >
+            {t("home.calc.cta")}
+          </a>
+          <p className="text-sm leading-normal text-[#4A4F58]">{t("home.calc.note")}</p>
+        </aside>
       </div>
     </section>
   );

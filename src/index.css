@@ -2,59 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * WebNova — «Ташкентская геометрия»
+ * Чернильный фон, бирюза и золото изразцов, восьмиконечная звезда как мотив.
+ * Имена токенов прежние, поэтому страницы блога, документов и админки
+ * получают новую палитру автоматически.
+ */
 @layer base {
   :root {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 96%;
+    --background: 220 20% 6%; /* #0C0E12 */
+    --foreground: 43 22% 91%; /* #EDEAE3 */
 
-    --card: 222 47% 9%;
-    --card-foreground: 210 40% 96%;
+    --card: 220 20% 9%; /* #12151B */
+    --card-foreground: 43 22% 91%;
 
-    --popover: 222 47% 9%;
-    --popover-foreground: 210 40% 96%;
+    --popover: 220 20% 9%;
+    --popover-foreground: 43 22% 91%;
 
-    --primary: 185 80% 55%;
-    --primary-foreground: 222 47% 6%;
+    --primary: 182 63% 54%; /* бирюза #3FD0D4 */
+    --primary-foreground: 220 20% 6%;
 
-    --secondary: 270 70% 60%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 40 73% 59%; /* золото #E3B04B */
+    --secondary-foreground: 220 20% 6%;
 
-    --muted: 222 30% 14%;
-    --muted-foreground: 215 20% 55%;
+    --muted: 218 18% 12%;
+    --muted-foreground: 218 8% 69%; /* #A9AEB7 */
 
-    --accent: 270 70% 60%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 40 73% 59%;
+    --accent-foreground: 220 20% 6%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 4 74% 58%;
+    --destructive-foreground: 43 22% 96%;
 
-    --border: 222 30% 16%;
-    --input: 222 30% 16%;
-    --ring: 185 80% 55%;
+    --border: 222 15% 17%; /* #262A33 */
+    --input: 220 15% 20%; /* #2C313B */
+    --ring: 40 73% 59%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
 
-    --neon-cyan: 185 80% 55%;
-    --neon-violet: 270 70% 60%;
-    --neon-cyan-glow: 185 80% 55%;
-    --neon-violet-glow: 270 70% 55%;
-    --surface: 222 40% 10%;
-    --surface-light: 222 30% 14%;
+    /* Старые имена «неоновых» цветов указывают на новую палитру */
+    --neon-cyan: 182 63% 54%;
+    --neon-violet: 40 73% 59%;
+    --neon-cyan-glow: 182 63% 54%;
+    --neon-violet-glow: 40 73% 59%;
+    --surface: 220 20% 9%;
+    --surface-light: 218 18% 12%;
 
-    --sidebar-background: 222 47% 8%;
-    --sidebar-foreground: 210 40% 96%;
-    --sidebar-primary: 185 80% 55%;
-    --sidebar-primary-foreground: 222 47% 6%;
-    --sidebar-accent: 222 30% 14%;
-    --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 222 30% 16%;
-    --sidebar-ring: 185 80% 55%;
+    --sidebar-background: 220 20% 8%;
+    --sidebar-foreground: 43 22% 91%;
+    --sidebar-primary: 182 63% 54%;
+    --sidebar-primary-foreground: 220 20% 6%;
+    --sidebar-accent: 218 18% 12%;
+    --sidebar-accent-foreground: 43 22% 91%;
+    --sidebar-border: 222 15% 17%;
+    --sidebar-ring: 40 73% 59%;
   }
 }
 
 @layer base {
   * {
     @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
@@ -69,92 +80,95 @@
   h6 {
     @apply font-display;
   }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--secondary));
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.3);
+  }
 }
 
 @layer utilities {
-  .glow-cyan {
-    box-shadow:
-      0 0 20px hsl(185 80% 55% / 0.3),
-      0 0 60px hsl(185 80% 55% / 0.1);
-  }
-
-  .glow-violet {
-    box-shadow:
-      0 0 20px hsl(270 70% 60% / 0.3),
-      0 0 60px hsl(270 70% 60% / 0.1);
-  }
-
+  /* Неоновые свечения из старой темы отключены: классы оставлены,
+     чтобы не ломать страницы, которые их используют */
+  .glow-cyan,
+  .glow-violet,
   .glow-cyan-sm {
-    box-shadow:
-      0 0 10px hsl(185 80% 55% / 0.2),
-      0 0 30px hsl(185 80% 55% / 0.08);
+    box-shadow: none;
   }
 
-  .text-glow-cyan {
-    text-shadow:
-      0 0 20px hsl(185 80% 55% / 0.5),
-      0 0 40px hsl(185 80% 55% / 0.2);
-  }
-
+  .text-glow-cyan,
   .text-glow-violet {
-    text-shadow:
-      0 0 20px hsl(270 70% 60% / 0.5),
-      0 0 40px hsl(270 70% 60% / 0.2);
+    text-shadow: none;
   }
 
   .gradient-text {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(
-      135deg,
-      hsl(185 80% 55%),
-      hsl(270 70% 60%)
-    );
+    color: hsl(var(--primary));
   }
 
   .gradient-border {
-    border-image: linear-gradient(135deg, hsl(185 80% 55%), hsl(270 70% 60%)) 1;
+    border-color: hsl(var(--primary));
   }
 
-  .tech-grid {
-    background-image:
-      linear-gradient(hsl(185 80% 55% / 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(185 80% 55% / 0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-    animation: gridMove 20s linear infinite;
-  }
-
-  @keyframes gridMove {
-    0% {
-      background-position: 0 0;
-    }
-    100% {
-      background-position: 60px 60px;
-    }
+  /* Узор из восьмиконечных звёзд вместо «технической сетки» */
+  .tech-grid,
+  .wn-tile {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23EDEAE3' stroke-opacity='0.07'%3E%3Crect x='20' y='20' width='24' height='24'/%3E%3Crect x='20' y='20' width='24' height='24' transform='rotate(45 32 32)'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 64px 64px;
   }
 
   .glass {
-    @apply bg-card/60 backdrop-blur-xl border border-border/50;
+    @apply bg-card border border-border;
   }
 
   .hover-glow {
-    @apply transition-all duration-500;
+    @apply transition-colors duration-300;
   }
 
   .hover-glow:hover {
-    box-shadow:
-      0 0 30px hsl(185 80% 55% / 0.2),
-      0 0 60px hsl(185 80% 55% / 0.05);
-    border-color: hsl(185 80% 55% / 0.3);
-    transform: translateY(-2px);
+    border-color: hsl(var(--primary) / 0.45);
   }
 
-  /* Scroll reveal animations */
+  /* Строки-списки в редакционном стиле */
+  .wn-row {
+    transition:
+      background-color 0.25s ease,
+      padding 0.25s ease;
+  }
+
+  .wn-row:hover {
+    background-color: hsl(var(--card));
+  }
+
+  .wn-label {
+    @apply font-mono text-sm uppercase tracking-[0.06em];
+  }
+
+  /* Медленное вращение звезды в первом экране */
+  @keyframes wn-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .wn-spin {
+    animation: wn-spin 120s linear infinite;
+  }
+
+  .wn-spin-rev {
+    animation: wn-spin 80s linear infinite reverse;
+  }
+
+  /* Появление при прокрутке */
   .scroll-reveal {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(24px);
     transition:
-      opacity 0.6s ease-out,
-      transform 0.6s ease-out;
+      opacity 0.7s ease-out,
+      transform 0.7s ease-out;
   }
 
   .scroll-reveal.active {
@@ -164,10 +178,10 @@
 
   .scroll-reveal-left {
     opacity: 0;
-    transform: translateX(-30px);
+    transform: translateX(-24px);
     transition:
-      opacity 0.6s ease-out,
-      transform 0.6s ease-out;
+      opacity 0.7s ease-out,
+      transform 0.7s ease-out;
   }
 
   .scroll-reveal-left.active {
@@ -177,10 +191,10 @@
 
   .scroll-reveal-right {
     opacity: 0;
-    transform: translateX(30px);
+    transform: translateX(24px);
     transition:
-      opacity 0.6s ease-out,
-      transform 0.6s ease-out;
+      opacity 0.7s ease-out,
+      transform 0.7s ease-out;
   }
 
   .scroll-reveal-right.active {
@@ -190,10 +204,10 @@
 
   .scroll-reveal-scale {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.96);
     transition:
-      opacity 0.6s ease-out,
-      transform 0.6s ease-out;
+      opacity 0.7s ease-out,
+      transform 0.7s ease-out;
   }
 
   .scroll-reveal-scale.active {
@@ -201,14 +215,13 @@
     transform: scale(1);
   }
 
-  /* Floating animation */
   @keyframes float-slow {
     0%,
     100% {
       transform: translateY(0px);
     }
     50% {
-      transform: translateY(-20px);
+      transform: translateY(-12px);
     }
   }
 
@@ -216,22 +229,28 @@
     animation: float-slow 6s ease-in-out infinite;
   }
 
-  /* Pulse glow animation */
-  @keyframes pulse-glow {
-    0%,
-    100% {
-      box-shadow:
-        0 0 20px hsl(185 80% 55% / 0.2),
-        0 0 40px hsl(185 80% 55% / 0.1);
-    }
-    50% {
-      box-shadow:
-        0 0 30px hsl(185 80% 55% / 0.4),
-        0 0 60px hsl(185 80% 55% / 0.2);
-    }
+  .pulse-glow-animation {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 
-  .pulse-glow-animation {
-    animation: pulse-glow 3s ease-in-out infinite;
+  .wn-spin,
+  .wn-spin-rev,
+  .float-animation {
+    animation: none;
+  }
+
+  .scroll-reveal,
+  .scroll-reveal-left,
+  .scroll-reveal-right,
+  .scroll-reveal-scale {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

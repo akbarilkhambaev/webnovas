@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect } from "react";
-import { Menu, X, Languages } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/hooks/useLanguage";
-import type { Language } from "@/contexts/LanguageContext";
+import StarMark from "@/components/brand/StarMark";
+import { container } from "@/components/brand/SectionHeader";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -15,101 +16,110 @@ const Navbar = () => {
   const isHome = pathname === "/";
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 24);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // On non-home pages, hash links get "/#hash" so they navigate home first
+  // На внутренних страницах якоря ведут сначала на главную
   const resolveHref = (href: string) =>
     href.startsWith("#") && !isHome ? `/${href}` : href;
 
   const navLinks = [
-    { label: t('nav.services'), href: "#services" },
-    { label: t('nav.portfolio'), href: "#portfolio" },
-    { label: t('nav.faq'), href: "#faq" },
-    { label: t('nav.calculator'), href: "#calculator" },
-    { label: t('news.label'), href: "/news", isRoute: true },
-    { label: t('nav.contact'), href: "#contact" },
+    { label: t("home.labels.services"), href: "#services" },
+    { label: t("home.labels.work"), href: "#portfolio" },
+    { label: t("home.labels.price"), href: "#calculator" },
+    { label: t("home.labels.faq"), href: "#faq" },
+    { label: t("home.labels.news"), href: "/news", isRoute: true },
+    { label: t("home.labels.contact"), href: "#contact" },
   ];
 
-  const toggleLanguage = () => {
-    setLanguage(language === 'ru' ? 'uz' : 'ru');
-  };
+  const languageSwitch = (className = "") => (
+    <div
+      role="group"
+      aria-label={t("home.changeLanguage")}
+      className={`flex items-center rounded-full border border-border p-1 font-mono text-xs ${className}`}
+    >
+      {(["ru", "uz"] as const).map((lang) => (
+        <button
+          key={lang}
+          type="button"
+          onClick={() => setLanguage(lang)}
+          aria-pressed={language === lang}
+          className={`min-h-[32px] rounded-full px-3 uppercase transition-colors ${
+            language === lang
+              ? "bg-foreground text-background"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          {lang}
+        </button>
+      ))}
+    </div>
+  );
+
+  const linkClass = "text-[15px] text-muted-foreground transition-colors hover:text-foreground";
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled ? 'glass border-b border-border/50 shadow-lg' : 'bg-transparent'
-    }`}>
-      <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-display font-bold tracking-tight hover:scale-105 transition-transform duration-300">
-          <span className="gradient-text">WEB</span>
-          <span className="text-foreground">NOVA</span>
+    <header
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
+        scrolled || open
+          ? "border-border bg-background/90 backdrop-blur-md"
+          : "border-transparent bg-transparent"
+      }`}
+    >
+      <div className={`${container} flex h-[72px] items-center justify-between gap-6`}>
+        <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
+          <StarMark size={30} />
+          <span className="font-display text-xl font-medium tracking-[-0.01em]">WebNova</span>
         </Link>
 
-        {/* Desktop */}
-        <div className="hidden md:flex items-center gap-8">
+        <nav aria-label="Основное меню" className="hidden items-center gap-8 lg:flex">
           {navLinks.map((link) =>
             link.isRoute ? (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300"
-              >
+              <Link key={link.href} href={link.href} className={linkClass}>
                 {link.label}
               </Link>
             ) : (
-              <a
-                key={link.href}
-                href={resolveHref(link.href)}
-                className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300"
-              >
+              <a key={link.href} href={resolveHref(link.href)} className={linkClass}>
                 {link.label}
               </a>
             )
           )}
-          
-          {/* Language Switcher */}
-          <button
-            onClick={toggleLanguage}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary hover:scale-110 transition-all duration-300"
-            aria-label="Change language"
-          >
-            <Languages size={18} />
-            <span className="font-semibold uppercase">{language}</span>
-          </button>
+        </nav>
 
+        <div className="hidden items-center gap-4 lg:flex">
+          {languageSwitch()}
           <a
             href={resolveHref("#contact")}
-            className="px-5 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold glow-cyan-sm hover:brightness-110 hover:scale-105 transition-all duration-300"
+            className="inline-flex min-h-[44px] items-center rounded-full bg-primary px-5 text-[15px] font-semibold text-primary-foreground transition hover:brightness-110"
           >
-            {t('hero.startProject')}
+            {t("home.cta")}
           </a>
         </div>
 
-        {/* Mobile toggle */}
         <button
+          type="button"
           onClick={() => setOpen(!open)}
-          className="md:hidden text-foreground"
+          aria-expanded={open}
+          aria-label={open ? t("home.closeMenu") : t("home.menu")}
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-border lg:hidden"
         >
-          {open ? <X size={24} /> : <Menu size={24} />}
+          {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       {open && (
-        <div className="md:hidden glass border-t border-border/30 animate-fade-up">
-          <div className="container mx-auto px-6 py-4 flex flex-col gap-4">
+        <div className="border-t border-border lg:hidden">
+          <nav aria-label="Мобильное меню" className={`${container} flex flex-col py-4`}>
             {navLinks.map((link) =>
               link.isRoute ? (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="border-b border-border py-4 font-display text-xl"
                 >
                   {link.label}
                 </Link>
@@ -118,25 +128,26 @@ const Navbar = () => {
                   key={link.href}
                   href={resolveHref(link.href)}
                   onClick={() => setOpen(false)}
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="border-b border-border py-4 font-display text-xl"
                 >
                   {link.label}
                 </a>
               )
             )}
-            
-            {/* Mobile Language Switcher */}
-            <button
-              onClick={toggleLanguage}
-              className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Languages size={18} />
-              <span className="font-semibold uppercase">{language}</span>
-            </button>
-          </div>
+            <div className="flex flex-wrap items-center justify-between gap-4 pt-6">
+              {languageSwitch()}
+              <a
+                href={resolveHref("#contact")}
+                onClick={() => setOpen(false)}
+                className="inline-flex min-h-[48px] items-center rounded-full bg-primary px-6 font-semibold text-primary-foreground"
+              >
+                {t("home.cta")}
+              </a>
+            </div>
+          </nav>
         </div>
       )}
-    </nav>
+    </header>
   );
 };
 

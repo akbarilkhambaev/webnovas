@@ -1,72 +1,49 @@
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import { Plus } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useInView } from "@/hooks/useInView";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "./ui/accordion";
+import SectionHeader, { container } from "@/components/brand/SectionHeader";
 
 const FAQSection = () => {
   const { t } = useLanguage();
   const { ref, inView } = useInView({ threshold: 0.1 });
 
-  const faqs = [
-    {
-      question: t('faq.q1.question'),
-      answer: t('faq.q1.answer'),
-    },
-    {
-      question: t('faq.q2.question'),
-      answer: t('faq.q2.answer'),
-    },
-    {
-      question: t('faq.q3.question'),
-      answer: t('faq.q3.answer'),
-    },
-    {
-      question: t('faq.q4.question'),
-      answer: t('faq.q4.answer'),
-    },
-    {
-      question: t('faq.q5.question'),
-      answer: t('faq.q5.answer'),
-    },
-  ];
+  const faqs = [1, 2, 3, 4, 5].map((n) => ({
+    question: t(`faq.q${n}.question`),
+    answer: t(`faq.q${n}.answer`),
+  }));
 
   return (
-    <section id="faq" className="py-32 relative" ref={ref}>
-      <div className="absolute inset-0 tech-grid opacity-20" />
-
-      <div className="container mx-auto px-6 relative z-10">
-        <div className={`text-center mb-20 scroll-reveal ${inView ? 'active' : ''}`}>
-          <span className="text-primary text-sm font-semibold tracking-widest uppercase">
-            {t('faq.title')}
-          </span>
-          <h2 className="text-4xl lg:text-5xl font-display font-bold mt-3">
-            {t('faq.heading')} <span className="gradient-text">{t('faq.headingHighlight')}</span>
-          </h2>
+    <section id="faq" ref={ref} className={`${container} pt-[clamp(72px,9vw,128px)]`}>
+      <div className="flex flex-wrap gap-10">
+        <div className={`flex-[1_1_320px] scroll-reveal ${inView ? "active" : ""}`}>
+          <SectionHeader index="05" label={t("home.labels.faq")} title={t("home.faq.heading")} className="mb-0" />
         </div>
 
-        <div className="max-w-3xl mx-auto">
-          <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((faq, index) => (
-              <AccordionItem
-                key={index}
-                value={`item-${index}`}
-                className={`glass rounded-xl px-6 border-none hover-glow scroll-reveal ${inView ? 'active' : ''}`}
-                style={{ transitionDelay: `${index * 0.1}s` }}
-              >
-                <AccordionTrigger className="text-left hover:text-primary transition-colors">
+        <AccordionPrimitive.Root
+          type="single"
+          collapsible
+          defaultValue="item-0"
+          className={`min-w-0 flex-[999_1_560px] border-b border-border scroll-reveal ${inView ? "active" : ""}`}
+        >
+          {faqs.map((faq, index) => (
+            <AccordionPrimitive.Item key={index} value={`item-${index}`} className="border-t border-border">
+              <AccordionPrimitive.Header>
+                <AccordionPrimitive.Trigger className="group flex min-h-[72px] w-full items-center justify-between gap-6 py-5 text-left text-[19px] font-medium transition-colors hover:text-primary">
                   {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
+                  <Plus
+                    size={22}
+                    aria-hidden="true"
+                    className="shrink-0 text-primary transition-transform duration-300 group-data-[state=open]:rotate-45"
+                  />
+                </AccordionPrimitive.Trigger>
+              </AccordionPrimitive.Header>
+              <AccordionPrimitive.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+                <p className="max-w-[720px] pb-6 leading-relaxed text-muted-foreground">{faq.answer}</p>
+              </AccordionPrimitive.Content>
+            </AccordionPrimitive.Item>
+          ))}
+        </AccordionPrimitive.Root>
       </div>
     </section>
   );

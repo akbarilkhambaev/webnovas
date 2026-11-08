@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Clock, Tag } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useInView } from "@/hooks/useInView";
 import { supabase, isSupabaseConfigured, type NewsArticleRow } from "@/lib/supabase";
 import { formatDate } from "@/data/news";
+import SectionHeader, { container } from "@/components/brand/SectionHeader";
 
 const NewsSection = () => {
   const { language, t } = useLanguage();
@@ -27,84 +28,75 @@ const NewsSection = () => {
   }, []);
 
   return (
-    <section id="news" className="py-32 relative" ref={ref}>
-      {/* Glow decoration */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-neon-violet/5 rounded-full blur-[120px] pointer-events-none" />
-
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Header */}
-        <div className={`flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6 scroll-reveal ${inView ? "active" : ""}`}>
-          <div>
-            <span className="text-primary text-sm font-semibold tracking-widest uppercase">
-              {t("news.label")}
-            </span>
-            <h2 className="text-4xl lg:text-5xl font-display font-bold mt-3">
-              {t("news.heading")}{" "}
-              <span className="gradient-text">{t("news.headingHighlight")}</span>
-            </h2>
-          </div>
-          <Link
-            href="/news"
-            className="group flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300 self-start md:self-auto"
-          >
-            {t("news.allArticles")}
-            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
-
-        {/* Cards grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {articles.map((article, i) => (
+    <section
+      id="news"
+      ref={ref}
+      className={articles.length > 0 ? `${container} pt-[clamp(72px,9vw,128px)]` : undefined}
+    >
+      {/* Пока статей нет, секция не занимает место на странице */}
+      {articles.length > 0 && (
+        <>
+          <div className={`flex flex-wrap items-end justify-between gap-6 scroll-reveal ${inView ? "active" : ""}`}>
+            <SectionHeader
+              label={t("home.labels.news")}
+              title={`${t("news.heading")} ${t("news.headingHighlight").toLowerCase()}`}
+            />
             <Link
-              href={`/news/${article.slug}`}
-              key={article.id}
-              className={`group glass rounded-2xl overflow-hidden hover-glow flex flex-col scroll-reveal-scale ${inView ? "active" : ""}`}
-              style={{ transitionDelay: `${i * 0.1}s` }}
+              href="/news"
+              className="group mb-12 inline-flex min-h-[44px] items-center gap-2 font-semibold text-primary"
             >
-              {/* Image */}
-              <div className="h-48 overflow-hidden relative">
-                <img
-                  src={article.image_url}
-                  alt={language === "ru" ? article.title_ru : article.title_uz}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                {/* Category badge */}
-                <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/20 border border-primary/30 text-primary backdrop-blur-sm flex items-center gap-1.5">
-                  <Tag size={10} />
-                  {language === "ru" ? article.category_ru : article.category_uz}
-                </span>
-              </div>
-
-              {/* Content */}
-              <div className="p-6 flex flex-col flex-1">
-                <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
-                  <span>{formatDate(article.date, language)}</span>
-                  <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
-                  <span className="flex items-center gap-1">
-                    <Clock size={11} />
-                    {language === "ru" ? article.read_time_ru : article.read_time_uz}
-                  </span>
-                </div>
-
-                <h3 className="font-display font-bold text-lg leading-snug mb-3 group-hover:text-primary transition-colors duration-300 line-clamp-2">
-                  {language === "ru" ? article.title_ru : article.title_uz}
-                </h3>
-
-                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 flex-1">
-                  {language === "ru" ? article.excerpt_ru : article.excerpt_uz}
-                </p>
-
-                <div className="mt-5 flex items-center gap-1.5 text-sm font-semibold text-primary">
-                  {t("news.readMore")}
-                  <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
+              {t("news.allArticles")}
+              <ArrowRight size={18} aria-hidden="true" className="transition-transform group-hover:translate-x-1" />
             </Link>
-          ))}
-        </div>
-      </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {articles.map((article, i) => {
+              const title = language === "ru" ? article.title_ru : article.title_uz;
+              return (
+                <Link
+                  href={`/news/${article.slug}`}
+                  key={article.id}
+                  className={`group flex flex-col overflow-hidden rounded-[18px] border border-border bg-card transition-colors hover:border-primary/45 scroll-reveal ${
+                    inView ? "active" : ""
+                  }`}
+                  style={{ transitionDelay: `${i * 0.08}s` }}
+                >
+                  <div className="h-48 overflow-hidden">
+                    <img
+                      src={article.image_url}
+                      alt=""
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="flex flex-1 flex-col gap-3 p-6">
+                    <div className="flex flex-wrap items-center gap-2 font-mono text-xs uppercase tracking-[0.04em] text-muted-foreground">
+                      <span className="text-secondary">
+                        {language === "ru" ? article.category_ru : article.category_uz}
+                      </span>
+                      <span aria-hidden="true">·</span>
+                      <span>{formatDate(article.date, language)}</span>
+                      <span aria-hidden="true">·</span>
+                      <span>{language === "ru" ? article.read_time_ru : article.read_time_uz}</span>
+                    </div>
+                    <h3 className="font-display text-lg font-medium leading-snug transition-colors group-hover:text-primary line-clamp-2">
+                      {title}
+                    </h3>
+                    <p className="flex-1 text-sm leading-relaxed text-muted-foreground line-clamp-3">
+                      {language === "ru" ? article.excerpt_ru : article.excerpt_uz}
+                    </p>
+                    <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+                      {t("news.readMore")}
+                      <ArrowUpRight size={15} aria-hidden="true" />
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </>
+      )}
     </section>
   );
 };

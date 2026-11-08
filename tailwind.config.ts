@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["var(--font-space-grotesk)", "sans-serif"],
-        body: ["var(--font-inter)", "sans-serif"],
+        display: ["var(--font-display)", "Arial Black", "sans-serif"],
+        body: ["var(--font-body)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -55,6 +56,7 @@ export default {
         "surface-light": "hsl(var(--surface-light))",
         "neon-cyan": "hsl(var(--neon-cyan))",
         "neon-violet": "hsl(var(--neon-violet))",
+        gold: "hsl(var(--secondary))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

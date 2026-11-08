@@ -3,148 +3,82 @@
 import { useLanguage } from "@/hooks/useLanguage";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Facebook, Instagram, Linkedin, Mail, Send } from "lucide-react";
+import { container } from "@/components/brand/SectionHeader";
+
+export const SOCIAL_LINKS = [
+  { label: "Telegram", href: "https://t.me/webnova_uz" },
+  { label: "Instagram", href: "https://instagram.com/webnova.uz" },
+  { label: "Facebook", href: "https://facebook.com/webnova.uz" },
+  { label: "LinkedIn", href: "https://linkedin.com/company/webnova" },
+];
 
 const Footer = () => {
   const { t } = useLanguage();
   const pathname = usePathname();
   const isHome = pathname === "/";
 
-  // On non-home pages prefix hash links with "/" so browser navigates home first
-  const resolveHref = (href: string) =>
-    href.startsWith("#") && !isHome ? `/${href}` : href;
+  // На внутренних страницах якоря ведут сначала на главную
+  const resolveHref = (href: string) => (href.startsWith("#") && !isHome ? `/${href}` : href);
 
-  const socialLinks = [
-    { icon: Send, href: "https://t.me/webnova_uz", label: "Telegram" },
-    { icon: Instagram, href: "https://instagram.com/webnova.uz", label: "Instagram" },
-    { icon: Facebook, href: "https://facebook.com/webnova.uz", label: "Facebook" },
-    { icon: Linkedin, href: "https://linkedin.com/company/webnova", label: "LinkedIn" },
+  const links = [
+    { label: t("home.labels.services"), href: "#services" },
+    { label: t("home.labels.work"), href: "#portfolio" },
+    { label: t("home.labels.price"), href: "#calculator" },
+    { label: t("home.labels.faq"), href: "#faq" },
+    { label: t("home.labels.news"), href: "/news", isRoute: true },
+    { label: t("home.labels.contact"), href: "#contact" },
   ];
 
-  const quickLinks = [
-    { label: t('nav.services'), href: "#services" },
-    { label: t('nav.portfolio'), href: "#portfolio" },
-    { label: t('news.label'), href: "/news", isRoute: true },
-    { label: t('nav.faq'), href: "#faq" },
-    { label: t('nav.contact'), href: "#contact" },
-  ];
-
-  const serviceLinks = [
-    { label: t('services.website.title'), href: "#services" },
-    { label: t('services.ecommerce.title'), href: "#services" },
-    { label: t('services.telegram.title'), href: "#services" },
-    { label: t('services.webapp.title'), href: "#services" },
-  ];
+  const linkClass = "text-muted-foreground transition-colors hover:text-foreground";
 
   return (
-    <footer className="border-t border-border/30 pt-16 pb-8 relative">
-      <div className="absolute inset-0 tech-grid opacity-10" />
-      
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          {/* Brand */}
-          <div>
-            <Link href="/" className="text-2xl font-display font-bold inline-block mb-4">
-              <span className="gradient-text">WEB</span>
-              <span className="text-foreground">NOVA</span>
-            </Link>
-            <p className="text-muted-foreground mb-6">
-              {t('footer.description')}
-            </p>
-            <div className="flex gap-3">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg glass flex items-center justify-center hover:glow-cyan-sm transition-all duration-300"
-                  aria-label={social.label}
-                >
-                  <social.icon size={18} />
+    <footer className="border-t border-border">
+      <div className={`${container} flex flex-col gap-10 pb-10 pt-12`}>
+        <div
+          aria-hidden="true"
+          className="select-none font-display text-[clamp(56px,13vw,190px)] font-bold leading-[0.9] tracking-[-0.04em] text-[#1A1E25]"
+        >
+          WebNova
+        </div>
+
+        <div className="flex flex-wrap justify-between gap-x-12 gap-y-8">
+          <p className="max-w-[320px] text-muted-foreground">{t("footer.description")}</p>
+
+          <nav aria-label="Нижнее меню" className="flex flex-wrap gap-x-6 gap-y-3 text-[15px]">
+            {links.map((link) =>
+              link.isRoute ? (
+                <Link key={link.href} href={link.href} className={linkClass}>
+                  {link.label}
+                </Link>
+              ) : (
+                <a key={link.href} href={resolveHref(link.href)} className={linkClass}>
+                  {link.label}
                 </a>
-              ))}
-            </div>
-          </div>
+              )
+            )}
+          </nav>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-semibold text-lg mb-4">{t('footer.quickLinks')}</h3>
-            <ul className="space-y-2">
-              {quickLinks.map((link, index) => (
-                <li key={index}>
-                  {link.isRoute ? (
-                    <Link
-                      href={link.href}
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  ) : (
-                    <a
-                      href={resolveHref(link.href)}
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Services */}
-          <div>
-            <h3 className="font-semibold text-lg mb-4">{t('footer.services')}</h3>
-            <ul className="space-y-2">
-              {serviceLinks.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={resolveHref(link.href)}
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Legal & Contact */}
-          <div>
-            <h3 className="font-semibold text-lg mb-4">{t('footer.legal')}</h3>
-            <ul className="space-y-2 mb-6">
-              <li>
-                <Link
-                  href="/privacy"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  {t('footer.privacy')}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/terms"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  {t('footer.terms')}
-                </Link>
-              </li>
-            </ul>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Mail size={18} />
-              <a href="mailto:info@webnova.uz" className="hover:text-primary transition-colors">
-                info@webnova.uz
+          <div className="flex flex-wrap gap-x-6 gap-y-3 text-[15px]">
+            {SOCIAL_LINKS.map((social) => (
+              <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                {social.label}
               </a>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-border/30 text-center text-sm text-muted-foreground">
-          <p>
-            © {new Date().getFullYear()} WEBNOVA. {t('footer.rights')}
-          </p>
+        <div className="flex flex-wrap justify-between gap-4 border-t border-border pt-6 text-sm text-[#8B919C]">
+          <span>
+            © {new Date().getFullYear()} WebNova · {t("contact.info.addressValue")}. {t("footer.rights")}
+          </span>
+          <div className="flex flex-wrap gap-6">
+            <Link href="/privacy" className="transition-colors hover:text-foreground">
+              {t("footer.privacy")}
+            </Link>
+            <Link href="/terms" className="transition-colors hover:text-foreground">
+              {t("footer.terms")}
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

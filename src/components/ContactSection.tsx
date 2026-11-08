@@ -1,283 +1,194 @@
 'use client'
 
 import { useState } from "react";
+import Link from "next/link";
 import { useLanguage } from "@/hooks/useLanguage";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useInView } from "@/hooks/useInView";
+import { container } from "@/components/brand/SectionHeader";
+import { SOCIAL_LINKS } from "@/components/Footer";
+
+const EMPTY_FORM = { name: "", email: "", phone: "", service: "", message: "" };
+
+const fieldLabel = "font-mono text-[13px] uppercase tracking-[0.06em] text-muted-foreground";
+const fieldInput =
+  "min-h-[52px] w-full rounded-xl border border-input bg-background px-4 text-foreground placeholder:text-[#8B919C] transition-colors focus:border-primary focus:outline-none";
 
 const ContactSection = () => {
   const { t } = useLanguage();
   const { toast } = useToast();
   const { ref, inView } = useInView({ threshold: 0.1 });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    service: "",
-    message: "",
-  });
+  const [formData, setFormData] = useState(EMPTY_FORM);
+
+  const handleChange = (field: keyof typeof EMPTY_FORM, value: string) =>
+    setFormData((prev) => ({ ...prev, [field]: value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const isDevelopment = process.env.NODE_ENV === "development";
 
     try {
-      const isDevelopment = process.env.NODE_ENV === 'development';
-      
-      const response = await fetch('/api/send-telegram', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetch("/api/send-telegram", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      // Handle development mode when API is not available
-      if (!response.ok && isDevelopment) {
-        console.log('📧 Форма отправлена (DEV режим):', formData);
-        toast({
-          title: "✅ Форма отправлена (DEV режим)",
-          description: "В продакшене заявка будет отправлена в Telegram. Данные в консоли.",
-        });
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          service: "",
-          message: "",
-        });
-        setIsSubmitting(false);
-        return;
-      }
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: t('contact.form.submit'),
-          description: data.message || "Спасибо! Мы свяжемся с вами в ближайшее время.",
-        });
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          service: "",
-          message: "",
-        });
+      if (response.ok || isDevelopment) {
+        if (!response.ok) console.log("Форма отправлена (DEV режим):", formData);
+        toast({ title: t("contact.form.submit"), description: t("home.contact.sent") });
+        setFormData(EMPTY_FORM);
       } else {
-        toast({
-          title: "Ошибка",
-          description: "Не удалось отправить заявку. Попробуйте позже.",
-          variant: "destructive",
-        });
+        toast({ title: t("home.contact.errorTitle"), description: t("home.contact.error"), variant: "destructive" });
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
-      
-      if (process.env.NODE_ENV === 'development') {
-        console.log('📧 Форма отправлена (DEV режим):', formData);
-        toast({
-          title: "✅ Форма отправлена (DEV режим)",
-          description: "В продакшене заявка будет отправлена в Telegram. Данные в консоли.",
-        });
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          service: "",
-          message: "",
-        });
+      console.error("Error submitting form:", error);
+      if (isDevelopment) {
+        toast({ title: t("contact.form.submit"), description: t("home.contact.sent") });
+        setFormData(EMPTY_FORM);
       } else {
-        toast({
-          title: "Ошибка",
-          description: "Произошла ошибка при отправке заявки.",
-          variant: "destructive",
-        });
+        toast({ title: t("home.contact.errorTitle"), description: t("home.contact.error"), variant: "destructive" });
       }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const contactInfo = [
-    {
-      icon: Mail,
-      label: t('contact.info.email'),
-      value: "info@webnova.uz",
-      href: "mailto:info@webnova.uz",
-    },
-    {
-      icon: Phone,
-      label: t('contact.info.phone'),
-      value: "+998 77 877 46 04",
-      href: "tel:+998778774604",
-    },
-    {
-      icon: MapPin,
-      label: t('contact.info.address'),
-      value: t('contact.info.addressValue'),
-      href: "#",
-    },
-  ];
-
   return (
-    <section id="contact" className="py-32 relative overflow-hidden" ref={ref}>
-      <div className="absolute inset-0 tech-grid opacity-30" />
-      
-      {/* Glow effects */}
-      <div className="absolute top-1/3 left-0 w-96 h-96 bg-neon-cyan/5 rounded-full blur-[100px]" />
-      <div className="absolute bottom-1/3 right-0 w-96 h-96 bg-neon-violet/5 rounded-full blur-[100px]" />
-
-      <div className="container mx-auto px-6 relative z-10">
-        <div className={`text-center mb-20 scroll-reveal ${inView ? 'active' : ''}`}>
-          <span className="text-primary text-sm font-semibold tracking-widest uppercase">
-            {t('contact.title')}
-          </span>
-          <h2 className="text-4xl lg:text-5xl font-display font-bold mt-3">
-            {t('contact.heading')}{" "}
-            <span className="gradient-text">{t('contact.headingHighlight')}</span>
+    <section id="contact" ref={ref} className={`${container} py-[clamp(72px,9vw,128px)]`}>
+      <div
+        className={`flex flex-wrap gap-14 rounded-[28px] border border-border bg-card p-[clamp(24px,5vw,64px)] scroll-reveal ${
+          inView ? "active" : ""
+        }`}
+      >
+        {/* Контакты */}
+        <div className="flex min-w-0 flex-[1_1_360px] flex-col gap-7">
+          <span className="wn-label text-primary">06 / {t("home.labels.contact")}</span>
+          <h2 className="font-display text-[clamp(30px,4vw,54px)] font-medium leading-[1.08] tracking-[-0.02em] [text-wrap:balance]">
+            {t("home.contact.heading")}
           </h2>
-          <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-            {t('contact.description')}
-          </p>
-        </div>
+          <p className="max-w-[440px] text-muted-foreground">{t("home.contact.description")}</p>
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Contact Info */}
-          <div className="space-y-8">
-            {contactInfo.map((info, i) => (
-              <a
-                key={i}
-                href={info.href}
-                className={`group glass rounded-2xl p-6 hover-glow flex items-start gap-4 transition-all duration-300 scroll-reveal-left ${inView ? 'active' : ''}`}
-                style={{ transitionDelay: `${i * 0.1}s` }}
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:glow-cyan-sm transition-all duration-500 flex-shrink-0">
-                  <info.icon className="text-primary" size={24} />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg mb-1">{info.label}</h3>
-                  <p className="text-muted-foreground">{info.value}</p>
-                </div>
-              </a>
-            ))}
-
-            {/* Map placeholder */}
-            <div className="glass rounded-2xl p-6 h-64 flex items-center justify-center">
-              <p className="text-muted-foreground">Карта расположения</p>
-            </div>
+          <div className="mt-2 flex flex-col gap-3.5">
+            <a href="tel:+998778774604" className="font-display text-[clamp(20px,2vw,26px)] transition-colors hover:text-primary">
+              +998 77 877 46 04
+            </a>
+            <a href="mailto:info@webnova.uz" className="text-lg text-foreground/80 transition-colors hover:text-primary">
+              info@webnova.uz
+            </a>
+            <span className="text-muted-foreground">{t("contact.info.addressValue")}</span>
           </div>
 
-          {/* Contact Form */}
-          <form onSubmit={handleSubmit} className={`glass rounded-2xl p-8 scroll-reveal-right ${inView ? 'active' : ''}`}>
-            <div className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-2">
-                  {t('contact.form.name')}
-                </label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder={t('contact.form.namePlaceholder')}
-                  value={formData.name}
-                  onChange={(e) => handleChange("name", e.target.value)}
-                  required
-                  className="bg-surface/50"
-                />
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    {t('contact.form.email')}
-                  </label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder={t('contact.form.emailPlaceholder')}
-                    value={formData.email}
-                    onChange={(e) => handleChange("email", e.target.value)}
-                    required
-                    className="bg-surface/50"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium mb-2">
-                    {t('contact.form.phone')}
-                  </label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder={t('contact.form.phonePlaceholder')}
-                    value={formData.phone}
-                    onChange={(e) => handleChange("phone", e.target.value)}
-                    required
-                    className="bg-surface/50"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="service" className="block text-sm font-medium mb-2">
-                  {t('contact.form.service')}
-                </label>
-                <Select value={formData.service} onValueChange={(value) => handleChange("service", value)}>
-                  <SelectTrigger className="bg-surface/50">
-                    <SelectValue placeholder={t('contact.form.servicePlaceholder')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="website">{t('services.website.title')}</SelectItem>
-                    <SelectItem value="ecommerce">{t('services.ecommerce.title')}</SelectItem>
-                    <SelectItem value="telegram">{t('services.telegram.title')}</SelectItem>
-                    <SelectItem value="webapp">{t('services.webapp.title')}</SelectItem>
-                    <SelectItem value="automation">{t('services.automation.title')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-2">
-                  {t('contact.form.message')}
-                </label>
-                <Textarea
-                  id="message"
-                  placeholder={t('contact.form.messagePlaceholder')}
-                  value={formData.message}
-                  onChange={(e) => handleChange("message", e.target.value)}
-                  required
-                  rows={5}
-                  className="bg-surface/50 resize-none"
-                />
-              </div>
-
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-primary text-primary-foreground glow-cyan hover:brightness-110 transition-all duration-300"
+          <div className="flex flex-wrap gap-2.5">
+            {SOCIAL_LINKS.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-[44px] items-center rounded-full border border-input px-[18px] text-[15px] text-foreground/80 transition-colors hover:border-foreground hover:text-foreground"
               >
-                {isSubmitting ? (
-                  t('contact.form.sending')
-                ) : (
-                  <>
-                    <Send size={18} className="mr-2" />
-                    {t('contact.form.submit')}
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
+                {social.label}
+              </a>
+            ))}
+          </div>
         </div>
+
+        {/* Форма */}
+        <form onSubmit={handleSubmit} className="flex min-w-0 flex-[1_1_420px] flex-col gap-[18px]">
+          <label className="flex flex-col gap-2">
+            <span className={fieldLabel}>{t("contact.form.name")}</span>
+            <input
+              type="text"
+              name="name"
+              autoComplete="name"
+              placeholder={t("contact.form.namePlaceholder")}
+              value={formData.name}
+              onChange={(e) => handleChange("name", e.target.value)}
+              required
+              className={fieldInput}
+            />
+          </label>
+
+          <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2">
+            <label className="flex flex-col gap-2">
+              <span className={fieldLabel}>{t("contact.form.phone")}</span>
+              <input
+                type="tel"
+                name="phone"
+                autoComplete="tel"
+                placeholder={t("contact.form.phonePlaceholder")}
+                value={formData.phone}
+                onChange={(e) => handleChange("phone", e.target.value)}
+                required
+                className={fieldInput}
+              />
+            </label>
+            <label className="flex flex-col gap-2">
+              <span className={fieldLabel}>{t("contact.form.email")}</span>
+              <input
+                type="email"
+                name="email"
+                autoComplete="email"
+                placeholder={t("contact.form.emailPlaceholder")}
+                value={formData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+                required
+                className={fieldInput}
+              />
+            </label>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <span id="service-label" className={fieldLabel}>
+              {t("contact.form.service")}
+            </span>
+            <Select value={formData.service} onValueChange={(value) => handleChange("service", value)}>
+              <SelectTrigger aria-labelledby="service-label" className={`${fieldInput} h-auto`}>
+                <SelectValue placeholder={t("contact.form.servicePlaceholder")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="website">{t("services.website.title")}</SelectItem>
+                <SelectItem value="ecommerce">{t("services.ecommerce.title")}</SelectItem>
+                <SelectItem value="telegram">{t("services.telegram.title")}</SelectItem>
+                <SelectItem value="webapp">{t("services.webapp.title")}</SelectItem>
+                <SelectItem value="automation">{t("services.automation.title")}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <label className="flex flex-col gap-2">
+            <span className={fieldLabel}>{t("contact.form.message")}</span>
+            <textarea
+              name="message"
+              rows={4}
+              placeholder={t("contact.form.messagePlaceholder")}
+              value={formData.message}
+              onChange={(e) => handleChange("message", e.target.value)}
+              required
+              className={`${fieldInput} resize-y py-3.5`}
+            />
+          </label>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="min-h-[56px] rounded-full bg-primary text-[17px] font-semibold text-primary-foreground transition hover:brightness-110 disabled:opacity-60"
+          >
+            {isSubmitting ? t("contact.form.sending") : t("contact.form.submit")}
+          </button>
+
+          <p className="text-sm text-[#8B919C]">
+            {t("home.contact.consentPrefix")}
+            <Link href="/privacy" className="text-foreground/80 underline underline-offset-4 hover:text-primary">
+              {t("home.contact.consentLink")}
+            </Link>
+            {t("home.contact.consentSuffix")}
+          </p>
+        </form>
       </div>
     </section>
   );
