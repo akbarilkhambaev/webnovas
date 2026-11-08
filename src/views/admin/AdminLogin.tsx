@@ -62,7 +62,7 @@ const AdminLogin = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
-                placeholder="admin@webnova.uz"
+                placeholder="admin@webnovas.uz"
                 className="w-full px-4 py-2.5 rounded-xl glass border border-border/50 bg-transparent text-sm focus:outline-none focus:border-primary/60 transition-colors"
               />
             </div>

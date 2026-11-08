@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { container } from "@/components/brand/SectionHeader";
 
 export const SOCIAL_LINKS = [
-  { label: "Telegram", href: "https://t.me/webnova_uz" },
+  { label: "Telegram", href: "https://t.me/webnovauz" },
   { label: "Instagram", href: "https://instagram.com/webnova.uz" },
   { label: "Facebook", href: "https://facebook.com/webnova.uz" },
   { label: "LinkedIn", href: "https://linkedin.com/company/webnova" },

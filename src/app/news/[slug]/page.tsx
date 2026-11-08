@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { notFound } from 'next/navigation'
 import NewsDetailClient from '@/components/NewsDetailClient'
 import type { NewsArticleRow } from '@/lib/supabase'
+import { baseOpenGraph } from '@/lib/seo'
 
 // Revalidate every 60 seconds (ISR)
 export const revalidate = 60
@@ -37,12 +38,14 @@ export async function generateMetadata({
   return {
     title: data.title_ru,
     description: data.excerpt_ru,
-    alternates: { canonical: `https://webnovas.uz/news/${slug}` },
+    alternates: { canonical: `/news/${slug}` },
     openGraph: {
-      url: `https://webnovas.uz/news/${slug}`,
+      ...baseOpenGraph,
+      type: 'article',
+      url: `/news/${slug}`,
       title: data.title_ru,
       description: data.excerpt_ru,
-      images: data.image_url ? [{ url: data.image_url }] : [],
+      images: data.image_url ? [{ url: data.image_url }] : baseOpenGraph.images,
     },
   }
 }

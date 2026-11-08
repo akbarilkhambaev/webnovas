@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useState, ReactNode } from 'react';
+import { createContext, useEffect, useState, ReactNode } from 'react';
 
 export type Language = 'ru' | 'uz';
 
@@ -18,6 +18,11 @@ export const LanguageContext = createContext<LanguageContextType | undefined>(un
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<Language>('ru');
+
+  // Атрибут lang у <html> следует за выбранным языком: так текст верно читают скринридеры и переводчики
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
 
   const t = (key: string): string => {
     const keys = key.split('.');
@@ -45,7 +50,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 const translations: Record<Language, TranslationObject> = {
   ru: {
     home: {
-      kicker: 'Цифровое агентство · Ташкент',
+      kicker: 'Разработка сайтов · Ташкент',
       titleStart: 'Сайты и системы, которые',
       titleHighlight: 'работают',
       titleEnd: 'на ваш бизнес',
@@ -143,24 +148,24 @@ const translations: Record<Language, TranslationObject> = {
       heading: 'Наши',
       headingHighlight: 'Услуги',
       website: {
-        title: 'Веб-сайты',
-        description: 'Современные, адаптивные сайты, которые увлекают вашу аудиторию и превращают посетителей в клиентов.',
+        title: 'Сайты',
+        description: 'Лендинги, сайты компаний и каталоги продукции с формой заявки. Удобно открываются и с телефона, и с компьютера.',
       },
       ecommerce: {
-        title: 'E-Commerce',
-        description: 'Полнофункциональные интернет-магазины, созданные для производительности, безопасности и удобства пользователей.',
+        title: 'Интернет-магазины',
+        description: 'Каталог с фильтрами и поиском, корзина, оформление заказа и панель для управления товарами. Онлайн-оплату подключаем отдельно.',
       },
       telegram: {
-        title: 'Telegram боты',
-        description: 'Умные боты, которые автоматизируют поддержку клиентов, продажи и взаимодействие 24/7.',
+        title: 'Telegram-боты',
+        description: 'Принимают заявки и заказы, записывают клиентов, отвечают на частые вопросы и делают рассылки — круглосуточно, без оператора.',
       },
       webapp: {
         title: 'Веб-приложения',
-        description: 'Кастомные веб-приложения со сложной логикой, дашбордами и функциями реального времени.',
+        description: 'Личные кабинеты, CRM и внутренние системы под процессы вашей компании: роли сотрудников, отчёты, связь с другими сервисами.',
       },
       automation: {
         title: 'Автоматизация',
-        description: 'Автоматизация рабочих процессов, которая устраняет ручные задачи и ускоряет бизнес-процессы.',
+        description: 'Связываем сайт, CRM, таблицы и мессенджеры, чтобы заявки, уведомления и отчёты появлялись без ручного переноса данных.',
       },
     },
     whyChooseUs: {
@@ -189,20 +194,20 @@ const translations: Record<Language, TranslationObject> = {
       heading: 'Процесс',
       headingHighlight: 'Работы',
       step1: {
-        title: 'Анализ',
-        description: 'Изучаем ваш бизнес и требования',
+        title: 'Бриф и оценка',
+        description: 'Созваниваемся, разбираем задачу и называем точную цену и срок. После согласования — предоплата 50%.',
       },
       step2: {
         title: 'Дизайн',
-        description: 'Создаем уникальный дизайн проекта',
+        description: 'Показываем макет главных страниц, согласуем правки и только после этого переходим к разработке.',
       },
       step3: {
         title: 'Разработка',
-        description: 'Разрабатываем с использованием передовых технологий',
+        description: 'Верстаем и программируем по утверждённому макету, по ходу показываем промежуточные результаты.',
       },
       step4: {
         title: 'Запуск',
-        description: 'Тестируем и запускаем ваш проект',
+        description: 'Проверяем на телефонах и компьютерах и публикуем проект. Остальные 50% — после сдачи, дальше 3 месяца бесплатной поддержки.',
       },
     },
     portfolio: {
@@ -298,7 +303,7 @@ const translations: Record<Language, TranslationObject> = {
       button: 'Начать сейчас',
     },
     footer: {
-      description: 'Создаем цифровые решения, которые работают.',
+      description: 'Разработка сайтов, интернет-магазинов и Telegram-ботов в Ташкенте.',
       quickLinks: 'Быстрые ссылки',
       services: 'Услуги',
       legal: 'Документы',
@@ -329,7 +334,7 @@ const translations: Record<Language, TranslationObject> = {
   },
   uz: {
     home: {
-      kicker: "Raqamli agentlik · Toshkent",
+      kicker: "Sayt yaratish · Toshkent",
       titleStart: "Biznesingiz uchun",
       titleHighlight: "ishlaydigan",
       titleEnd: "saytlar va tizimlar",
@@ -427,24 +432,24 @@ const translations: Record<Language, TranslationObject> = {
       heading: 'Bizning',
       headingHighlight: 'Xizmatlar',
       website: {
-        title: 'Veb-saytlar',
-        description: 'Auditoriyangizni qiziqtiradigan va tashrif buyuruvchilarni mijozlarga aylantiradigan zamonaviy, moslashuvchan veb-saytlar.',
+        title: 'Saytlar',
+        description: 'Lendinglar, kompaniya saytlari va mahsulot kataloglari — ariza formasi bilan. Telefonda ham, kompyuterda ham qulay ochiladi.',
       },
       ecommerce: {
-        title: 'Elektron tijorat',
-        description: 'Ishlash, xavfsizlik va foydalanuvchi tajribasi uchun yaratilgan to\'liq funksional onlayn do\'konlar.',
+        title: 'Onlayn do\'konlar',
+        description: 'Filtr va qidiruvli katalog, savat, buyurtma rasmiylashtirish va mahsulotlarni boshqarish paneli. Onlayn to\'lov alohida ulanadi.',
       },
       telegram: {
-        title: 'Telegram botlar',
-        description: 'Mijozlarni qo\'llab-quvvatlash, sotish va aloqani 24/7 avtomatlashtiruvchi aqlli botlar.',
+        title: 'Telegram-botlar',
+        description: 'Ariza va buyurtmalarni qabul qiladi, mijozlarni yozib oladi, ko\'p beriladigan savollarga javob beradi va xabarnomalar yuboradi — kecha-kunduz, operatorsiz.',
       },
       webapp: {
         title: 'Veb-ilovalar',
-        description: 'Murakkab mantiq, boshqaruv panellari va real vaqt funksiyalari bilan maxsus veb-ilovalar.',
+        description: 'Shaxsiy kabinetlar, CRM va kompaniyangiz jarayonlariga mos ichki tizimlar: xodimlar rollari, hisobotlar, boshqa servislar bilan bog\'lanish.',
       },
       automation: {
         title: 'Avtomatlashtirish',
-        description: 'Qo\'lda bajariluvchi vazifalarni yo\'q qiladigan va biznes jarayonlarini tezlashtiradigan ish jarayonlarini avtomatlashtirish.',
+        description: 'Sayt, CRM, jadvallar va messenjerlarni bog\'laymiz — arizalar, bildirishnomalar va hisobotlar ma\'lumotlarni qo\'lda ko\'chirmasdan paydo bo\'ladi.',
       },
     },
     whyChooseUs: {
@@ -473,20 +478,20 @@ const translations: Record<Language, TranslationObject> = {
       heading: 'Ish',
       headingHighlight: 'Jarayoni',
       step1: {
-        title: 'Tahlil',
-        description: 'Biznesingiz va talablaringizni o\'rganamiz',
+        title: 'Brif va baholash',
+        description: 'Qo\'ng\'iroq qilib, vazifani tahlil qilamiz va aniq narx hamda muddatni aytamiz. Kelishilgandan keyin — 50% oldindan to\'lov.',
       },
       step2: {
         title: 'Dizayn',
-        description: 'Loyihaning noyob dizaynini yaratamiz',
+        description: 'Asosiy sahifalar maketini ko\'rsatamiz, tuzatishlarni kelishib olamiz va shundan keyingina ishlab chiqishga o\'tamiz.',
       },
       step3: {
         title: 'Ishlab chiqish',
-        description: 'Ilg\'or texnologiyalardan foydalanib ishlab chiqamiz',
+        description: 'Tasdiqlangan maket asosida sahifalarni yig\'amiz va dasturlaymiz, oraliq natijalarni jarayon davomida ko\'rsatamiz.',
       },
       step4: {
         title: 'Ishga tushirish',
-        description: 'Loyihangizni sinovdan o\'tkazamiz va ishga tushiramiz',
+        description: 'Telefon va kompyuterlarda tekshiramiz va loyihani e\'lon qilamiz. Qolgan 50% — topshirilgandan keyin, so\'ng 3 oy bepul qo\'llab-quvvatlash.',
       },
     },
     portfolio: {
@@ -582,7 +587,7 @@ const translations: Record<Language, TranslationObject> = {
       button: 'Hozir boshlash',
     },
     footer: {
-      description: 'Ishlaydigan raqamli yechimlarni yaratamiz.',
+      description: 'Toshkentda saytlar, onlayn do\'konlar va Telegram-botlar yaratamiz.',
       quickLinks: 'Tezkor havolalar',
       services: 'Xizmatlar',
       legal: 'Hujjatlar',

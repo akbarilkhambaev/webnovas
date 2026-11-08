@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { createClient } from '@supabase/supabase-js'
 import NewsClient from '@/components/NewsClient'
 import type { NewsArticleRow } from '@/lib/supabase'
+import { baseOpenGraph } from '@/lib/seo'
 
 // Revalidate every 60 seconds (ISR)
 export const revalidate = 60
@@ -9,13 +10,14 @@ export const revalidate = 60
 export const metadata: Metadata = {
   title: 'Новости и статьи',
   description:
-    'Блог WebNova: актуальные статьи о веб-разработке, дизайне, SEO, Telegram ботах и цифровых технологиях в Узбекистане.',
-  alternates: { canonical: 'https://webnovas.uz/news' },
+    'Блог WebNova: статьи о разработке сайтов, интернет-магазинов и Telegram-ботов, о дизайне и SEO для бизнеса в Узбекистане.',
+  alternates: { canonical: '/news' },
   openGraph: {
-    url: 'https://webnovas.uz/news',
+    ...baseOpenGraph,
+    url: '/news',
     title: 'Новости и статьи | WebNova',
     description:
-      'Блог WebNova: статьи о веб-разработке, дизайне, SEO и цифровых технологиях.',
+      'Статьи о разработке сайтов, интернет-магазинов и Telegram-ботов, о дизайне и SEO.',
   },
 }
 

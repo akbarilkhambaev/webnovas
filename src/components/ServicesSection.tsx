@@ -2,18 +2,11 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useInView } from "@/hooks/useInView";
 import SectionHeader, { container } from "@/components/brand/SectionHeader";
 import { priceFrom } from "@/lib/price";
+import { SERVICES as services } from "@/data/pricing";
 
 const ServicesSection = () => {
   const { t, language } = useLanguage();
   const { ref, inView } = useInView({ threshold: 0.1 });
-
-  const services = [
-    { key: "website", price: 500 },
-    { key: "ecommerce", price: 1500 },
-    { key: "telegram", price: 300 },
-    { key: "webapp", price: 2000 },
-    { key: "automation", price: 800 },
-  ];
 
   return (
     <section id="services" ref={ref} className={`${container} pt-[clamp(72px,9vw,128px)]`}>

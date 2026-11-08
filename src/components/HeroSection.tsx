@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { container } from "@/components/brand/SectionHeader";
 import { priceFrom } from "@/lib/price";
+import { PRICE } from "@/data/pricing";
 import { C } from "@/components/brand/StarMark";
 
 const RAYS = [0, 45, 90, 135, 180, 225, 270, 315];
@@ -86,8 +87,8 @@ const HeroSection = () => {
   const { t, language } = useLanguage();
 
   const facts = [
-    { label: t("home.factSite"), value: priceFrom(500, language) },
-    { label: t("home.factBot"), value: priceFrom(300, language) },
+    { label: t("home.factSite"), value: priceFrom(PRICE.website, language) },
+    { label: t("home.factBot"), value: priceFrom(PRICE.telegram, language) },
     { label: t("home.factLaunch"), value: t("home.factLaunchValue") },
   ];
 

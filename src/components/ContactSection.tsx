@@ -76,8 +76,8 @@ const ContactSection = () => {
             <a href="tel:+998778774604" className="font-display text-[clamp(20px,2vw,26px)] transition-colors hover:text-primary">
               +998 77 877 46 04
             </a>
-            <a href="mailto:info@webnova.uz" className="text-lg text-foreground/80 transition-colors hover:text-primary">
-              info@webnova.uz
+            <a href="mailto:info@webnovas.uz" className="text-lg text-foreground/80 transition-colors hover:text-primary">
+              info@webnovas.uz
             </a>
             <span className="text-muted-foreground">{t("contact.info.addressValue")}</span>
           </div>

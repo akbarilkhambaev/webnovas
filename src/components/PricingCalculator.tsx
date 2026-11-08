@@ -3,30 +3,12 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useInView } from "@/hooks/useInView";
 import SectionHeader, { container } from "@/components/brand/SectionHeader";
 import { formatUsd, priceFrom } from "@/lib/price";
+import { FEATURES as FEATURE_LIST, SERVICES, TIMELINES as TIMELINE_LIST } from "@/data/pricing";
 
-const PROJECT_TYPES = [
-  { id: "website", basePrice: 500 },
-  { id: "ecommerce", basePrice: 1500 },
-  { id: "telegram", basePrice: 300 },
-  { id: "webapp", basePrice: 2000 },
-  { id: "automation", basePrice: 800 },
-];
-
-const FEATURES = [
-  { id: "cms", price: 300 },
-  { id: "multilang", price: 200 },
-  { id: "seo", price: 250 },
-  { id: "analytics", price: 150 },
-  { id: "payment", price: 400 },
-  { id: "mobile", price: 1000 },
-];
-
-// Множители срока — как в прежней версии калькулятора
-const TIMELINES = [
-  { id: "urgent", multiplier: 1.5 },
-  { id: "standard", multiplier: 1 },
-  { id: "flexible", multiplier: 0.85 },
-];
+// Цены и множители — в data/pricing.ts
+const PROJECT_TYPES = SERVICES.map((s) => ({ id: s.key, basePrice: s.price }));
+const FEATURES = FEATURE_LIST.map((f) => ({ id: f.key, price: f.price }));
+const TIMELINES = TIMELINE_LIST.map((t) => ({ id: t.key, multiplier: t.multiplier }));
 
 const legendClass = "mb-4 font-mono text-[13px] uppercase tracking-[0.06em] text-muted-foreground";
 

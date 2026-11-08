@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Unbounded, Onest, JetBrains_Mono } from 'next/font/google'
 import '@/index.css'
 import Providers from '@/components/Providers'
+import { SERVICES, type ServiceKey } from '@/data/pricing'
+import { baseOpenGraph, CONTACTS, HOME_DESCRIPTION, HOME_TITLE, jsonLdString, SITE_URL } from '@/lib/seo'
 
 // Все три шрифта поддерживают кириллицу и узбекскую латиницу
 const display = Unbounded({
@@ -22,64 +24,94 @@ const mono = JetBrains_Mono({
   display: 'swap',
 })
 
-const jsonLd = {
+const SERVICE_NAMES: Record<ServiceKey, string> = {
+  website: 'Разработка сайтов',
+  ecommerce: 'Разработка интернет-магазинов',
+  telegram: 'Разработка Telegram-ботов',
+  webapp: 'Разработка веб-приложений',
+  automation: 'Автоматизация бизнес-процессов',
+}
+
+// Сведения о компании для поисковиков: контакты, город, услуги и стартовые цены
+const organizationJsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
+  '@type': 'ProfessionalService',
+  '@id': `${SITE_URL}/#organization`,
   name: 'WebNova',
-  url: 'https://webnovas.uz',
-  description: 'Цифровое агентство в Ташкенте. Разрабатываем сайты, веб-приложения, интернет-магазины и Telegram боты.',
+  url: SITE_URL,
+  description: 'Разработка сайтов, интернет-магазинов, Telegram-ботов и веб-приложений в Ташкенте.',
+  telephone: CONTACTS.phone,
+  email: CONTACTS.email,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Ташкент',
+    addressCountry: 'UZ',
+  },
+  areaServed: { '@type': 'Country', name: 'Узбекистан' },
+  knowsLanguage: ['ru', 'uz', 'en'],
   contactPoint: {
     '@type': 'ContactPoint',
-    telephone: '+998-77-877-46-04',
+    telephone: CONTACTS.phone,
+    email: CONTACTS.email,
     contactType: 'customer service',
     availableLanguage: ['Russian', 'Uzbek'],
   },
-  sameAs: [
-    'https://instagram.com/webnova.uz',
-    'https://t.me/webnova_uz',
-    'https://facebook.com/webnova.uz',
-  ],
+  sameAs: [CONTACTS.telegram, 'https://instagram.com/webnova.uz', 'https://facebook.com/webnova.uz'],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Услуги WebNova',
+    itemListElement: SERVICES.map((service) => ({
+      '@type': 'Offer',
+      itemOffered: { '@type': 'Service', name: SERVICE_NAMES[service.key] },
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        minPrice: service.price,
+        priceCurrency: 'USD',
+      },
+    })),
+  },
+}
+
+// Коды подтверждения Google Search Console и Яндекс.Вебмастера — из переменных окружения.
+// Пустые значения не выводим, чтобы не было пустых <meta>.
+const verification: Metadata['verification'] = {
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  }),
+  ...(process.env.NEXT_PUBLIC_YANDEX_VERIFICATION && {
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
+  }),
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://webnovas.uz'),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'WebNova — Разработка сайтов в Ташкенте',
+    default: HOME_TITLE,
     template: '%s | WebNova',
   },
-  description:
-    'WebNova — цифровое агентство в Ташкенте. Разрабатываем сайты, веб-приложения, интернет-магазины и Telegram боты. Более 50 реализованных проектов.',
+  description: HOME_DESCRIPTION,
+  applicationName: 'WebNova',
   keywords: [
-    'веб-разработка',
-    'сайты Ташкент',
-    'WebNova',
-    'Telegram боты',
-    'веб-агентство Узбекистан',
-    'интернет-магазин',
-    'веб-приложения',
+    'разработка сайтов Ташкент',
+    'создание сайтов Ташкент',
+    'заказать сайт Ташкент',
+    'интернет-магазин под ключ',
+    'Telegram-бот для бизнеса',
+    'веб-студия Ташкент',
+    'sayt yaratish Toshkent',
   ],
-  alternates: { canonical: 'https://webnovas.uz' },
   openGraph: {
-    type: 'website',
-    locale: 'ru_RU',
-    url: 'https://webnovas.uz',
-    siteName: 'WebNova',
-    title: 'WebNova — Разработка сайтов в Ташкенте',
-    description:
-      'WebNova — цифровое агентство. Разрабатываем сайты, приложения и Telegram боты в Ташкенте.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'WebNova' }],
+    ...baseOpenGraph,
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'WebNova — Разработка сайтов в Ташкенте',
-    description: 'WebNova — цифровое агентство в Ташкенте.',
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
   },
   robots: { index: true, follow: true },
-  // Verification codes — fill in after registering in GSC / Yandex Webmaster
-  verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? '',
-    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION ?? '',
-  },
+  verification,
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -88,7 +120,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdString(organizationJsonLd) }}
         />
       </head>
       <body>

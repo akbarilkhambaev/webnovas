@@ -36,11 +36,11 @@ const PrivacyPolicy = () => {
         },
         {
           title: "6. Ваши права",
-          content: "Вы имеете право запросить доступ к своим данным, их исправление или удаление. Для этого свяжитесь с нами по email: info@webnova.uz",
+          content: "Вы имеете право запросить доступ к своим данным, их исправление или удаление. Для этого свяжитесь с нами по email: info@webnovas.uz",
         },
         {
           title: "7. Контакты",
-          content: "Если у вас есть вопросы о нашей политике конфиденциальности, свяжитесь с нами:\nEmail: info@webnova.uz\nТелефон: +998 90 123 45 67",
+          content: "Если у вас есть вопросы о нашей политике конфиденциальности, свяжитесь с нами:\nEmail: info@webnovas.uz\nТелефон: +998 77 877 46 04",
         },
       ],
     },
@@ -70,11 +70,11 @@ const PrivacyPolicy = () => {
         },
         {
           title: "6. Sizning huquqlaringiz",
-          content: "Siz o'z ma'lumotlaringizga kirishni, ularni tuzatishni yoki o'chirishni so'rash huquqiga egasiz. Buning uchun biz bilan bog'laning: info@webnova.uz",
+          content: "Siz o'z ma'lumotlaringizga kirishni, ularni tuzatishni yoki o'chirishni so'rash huquqiga egasiz. Buning uchun biz bilan bog'laning: info@webnovas.uz",
         },
         {
           title: "7. Kontaktlar",
-          content: "Agar maxfiylik siyosatimiz haqida savollaringiz bo'lsa, biz bilan bog'laning:\nEmail: info@webnova.uz\nTelefon: +998 90 123 45 67",
+          content: "Agar maxfiylik siyosatimiz haqida savollaringiz bo'lsa, biz bilan bog'laning:\nEmail: info@webnovas.uz\nTelefon: +998 77 877 46 04",
         },
       ],
     },
